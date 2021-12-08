@@ -105,15 +105,17 @@ def weapon_pick():
             break
 
 def arena_enter():
+    global opponent
     explain("\nYou're ready to fight! There are several other contestants.")
     for count,contestant in enumerate(contestants_ls,1):
         print(f"Contestant {count} is: " + contestant.name)
 
     opponent = contestants_ls[int(input("Please type the number of the contestant you would like to duel.\n> ")) - 1]
     opponent.weapon = random.choice(weapon_ls)
-    explain(f"\n{opponent.name} will be fighting you with a {opponent.weapon.name}. Good luck!\n")
+    explain(f"\n{opponent.name} will be fighting you with a {opponent.weapon.name}, which is a {opponent.weapon.w_type} weapon. Good luck!\n")
 
 def combat_stats():
+    print(f"Your opponent is using a {opponent.weapon.w_type} weapon.")
     print(f"{opponent.name}'s skill: {opponent.skill}, speed: {opponent.speed}, strength: {opponent.strength}.\n")
     explain(f"{player.name}'s skill: {player.skill}, speed: {player.speed}, strength: {player.strength}.\n")
     print("\nHere's how the weapons of you and your opponent impacted your stats...\n")
@@ -155,7 +157,7 @@ def attack():
         damage_done = round(source.getDamage() - ((target.skill + target.speed) * attack_evade_mod))
 
         if damage_done >= 0:
-            print(f"You did {damage_done} damage.")
+            print(f"{b} damage done was: {damage_done}.")
             target.takeDamage(damage_done)
         else:
             print(f"You did 1 damage.")
