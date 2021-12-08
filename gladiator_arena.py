@@ -117,7 +117,7 @@ def combat_stats():
     print(f"{opponent.name}'s skill: {opponent.skill}, speed: {opponent.speed}, strength: {opponent.strength}.\n")
     explain(f"{player.name}'s skill: {player.skill}, speed: {player.speed}, strength: {player.strength}.\n")
     print("\nHere's how the weapons of you and your opponent impacted your stats...\n")
-    print(opponent.weapon.w_type)
+    print(f"Your opponent is using a {opponent.weapon.w_type} weapon.")
     print(f"{opponent.name}'s skill: {opponent.skill}, speed: {opponent.getSpeed()}, potential damage: {opponent.getDamage()}.\n")
     explain(f"{player.name}'s skill: {player.skill}, speed: {player.getSpeed()}, potential damage: {player.getDamage()}.\n")
 
