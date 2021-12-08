@@ -1,5 +1,7 @@
 import random
 from sys import exit
+import glad_global_info as info
+import glad_classes as classes
 
 class Weapon:
     def __init__(self, name, w_type, speed, damage):
@@ -184,6 +186,9 @@ opponent = contestants_ls[0]
 check_explain = input("Would you like an explanation of how this works?\n> ")
 if check_explain.lower() == "yes":
     fight_explain()
+
+classes.welcome()
+info.better_welcome()
 weapon_pick()
 arena_enter()
 combat_stats()
