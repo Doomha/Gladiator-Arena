@@ -29,18 +29,30 @@ def weapon_pick():
             print(f"You've chosen to fight with a {weapon.name}.")
             break
 
+def armor_pick():
+    print("Here are the armor options you can choose from:")
+    for armor in info.armor_ls:
+        print(armor.name)
+    print(f"Out of these {len(info.armor_ls)} options, you can only pick one.")
+    for armor in info.armor_ls:
+        armor_select = input(f"Would you like to use {armor.name}?\n> ")
+        if armor_select.lower() == 'yes':
+            info.player.armor = armor
+            print(f"You've chosen to fight with {armor.name}.")
+            break
+
 def arena_enter():
     explain("\nYou're ready to fight! There are several other contestants.")
     for count,contestant in enumerate(info.contestants_ls,1):
         print(f"Contestant {count} is: " + contestant.name)
 
     def opponent_input_check():
-        opponent_input = int(input("Please type the number of the contestant you would like to duel.\n> "))
-        if opponent_input > count or opponent_input <= 0 or opponent_input == "":
-            explain("If looks like you haven't typed in a valid number. Please try again.")
+        opponent_input = input("Please type the number of the contestant you would like to duel.\n> ")
+        if opponent_input.isnumeric() != True or int(opponent_input) > count or int(opponent_input) <= 0:
+            explain("\nIf looks like you haven't typed in a valid number. Please try again.\n")
             opponent_input_check()
         else:
-            info.valid_opponent_input = opponent_input
+            info.valid_opponent_input = int(opponent_input)
 
     opponent_input_check()
     info.opponent = info.contestants_ls[info.valid_opponent_input - 1]
@@ -117,6 +129,7 @@ def explanation():
 explanation()
 classes.get_player_name()
 weapon_pick()
+armor_pick()
 arena_enter()
 combat_stats()
 attack_init()

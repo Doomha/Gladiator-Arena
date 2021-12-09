@@ -46,6 +46,18 @@ class Armor:
         self.defense = defense
         self.weight = weight
 
+class Chainmail(Armor):
+    def __init__(self):
+        super().__init__("Chainmail", 3, 4)
+
+class Platemail(Armor):
+    def __init__(self):
+        super().__init__("Platemail", 5, 6)
+
+class Tunic(Armor):
+    def __init__(self):
+        super().__init__("Tunic", 0, 0)
+
 class Magic_armor(Armor):
     def __init__(self, name, defense, weight, a_magic_buff):
         super().__init__(name, defense, weight)
@@ -59,6 +71,7 @@ class Contestant:
         self.strength = strength
         self.health = 10
         self.weapon = None
+        self.armor = None
     #: Effectively the battle forumla.
     def getDamage(self):
         return float((self.strength + self.weapon.damage)/2)
