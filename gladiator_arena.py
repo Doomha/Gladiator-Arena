@@ -109,9 +109,9 @@ def win_condition():
         quit()
 
 def explanation():
-check_explain = input("Would you like an explanation of how this works?\n> ")
-if check_explain.lower() == "yes":
-    fight_explain()
+    check_explain = input("Would you like an explanation of how this works?\n> ")
+    if check_explain.lower() == "yes":
+        fight_explain()
 
 
 explanation()

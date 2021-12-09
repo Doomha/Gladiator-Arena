@@ -74,7 +74,7 @@ class Stats:
         self.damage = damage
         self.health = health
 
+#: without setting player.name to pl_name here, player.name doesn't update.
 def get_player_name():
     info.pl_name = input("What is your name?\n> ")
-    print(info.pl_name)
-    print(info.player.name)
+    info.player.name = info.pl_name
