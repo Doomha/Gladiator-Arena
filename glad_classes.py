@@ -57,8 +57,9 @@ class Contestant:
         self.skill = skill
         self.speed = speed
         self.strength = strength
-        self.health = 10 #: info.start_health
+        self.health = 10
         self.weapon = None
+    #: Effectively the battle forumla.
     def getDamage(self):
         return float((self.strength + self.weapon.damage)/2)
     def getSpeed(self):
@@ -72,3 +73,8 @@ class Stats:
         self.speed = speed
         self.damage = damage
         self.health = health
+
+def get_player_name():
+    info.pl_name = input("What is your name?\n> ")
+    print(info.pl_name)
+    print(info.player.name)

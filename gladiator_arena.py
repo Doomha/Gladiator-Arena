@@ -2,6 +2,7 @@ import random
 from sys import exit
 import glad_global_info as info
 import glad_classes as classes
+global opponent
 
 def explain(info):
     print(info)
@@ -24,35 +25,42 @@ def weapon_pick():
     for weapon in info.weapon_ls:
         weapon_select = input(f"Would you like to use a {weapon.name}?\n> ")
         if weapon_select.lower() == 'yes':
-            player.weapon = weapon
+            info.player.weapon = weapon
             print(f"You've chosen to fight with a {weapon.name}.")
             break
 
 def arena_enter():
-    global opponent
     explain("\nYou're ready to fight! There are several other contestants.")
     for count,contestant in enumerate(info.contestants_ls,1):
         print(f"Contestant {count} is: " + contestant.name)
 
-    opponent = info.contestants_ls[int(input("Please type the number of the contestant you would like to duel.\n> ")) - 1]
-    opponent.weapon = random.choice(info.weapon_ls)
-    explain(f"\n{opponent.name} will be fighting you with a {opponent.weapon.name}, which is a {opponent.weapon.w_type} weapon. Good luck!\n")
+    def opponent_input_check():
+        opponent_input = int(input("Please type the number of the contestant you would like to duel.\n> "))
+        if opponent_input > count or opponent_input <= 0 or opponent_input == "":
+            explain("If looks like you haven't typed in a valid number. Please try again.")
+            opponent_input_check()
+        else:
+            info.valid_opponent_input = opponent_input
+
+    opponent_input_check()
+    info.opponent = info.contestants_ls[info.valid_opponent_input - 1]
+    info.opponent.weapon = random.choice(info.weapon_ls)
+    explain(f"\n{info.opponent.name} will be fighting you with a {info.opponent.weapon.name}, which is a {info.opponent.weapon.w_type} weapon. Good luck!\n")
 
 def combat_stats():
-    print(f"Your opponent is using a {opponent.weapon.w_type} weapon.")
-    print(f"{opponent.name}'s skill: {opponent.skill}, speed: {opponent.speed}, strength: {opponent.strength}.\n")
-    explain(f"{player.name}'s skill: {player.skill}, speed: {player.speed}, strength: {player.strength}.\n")
+    print(f"Your opponent is using a {info.opponent.weapon.w_type} weapon.")
+    print(f"{info.opponent.name}'s skill: {info.opponent.skill}, speed: {info.opponent.speed}, strength: {info.opponent.strength}.\n")
+    explain(f"{info.player.name}'s skill: {info.player.skill}, speed: {info.player.speed}, strength: {info.player.strength}.\n")
     print("\nHere's how the weapons of you and your opponent impacted your stats...\n")
-    print(f"Your opponent is using a {opponent.weapon.w_type} weapon.")
-    print(f"{opponent.name}'s skill: {opponent.skill}, speed: {opponent.getSpeed()}, potential damage: {opponent.getDamage()}.\n")
-    explain(f"{player.name}'s skill: {player.skill}, speed: {player.getSpeed()}, potential damage: {player.getDamage()}.\n")
+    print(f"Your opponent is using a {info.opponent.weapon.w_type} weapon.")
+    print(f"{info.opponent.name}'s skill: {info.opponent.skill}, speed: {info.opponent.getSpeed()}, potential damage: {info.opponent.getDamage()}.\n")
+    explain(f"{info.player.name}'s skill: {info.player.skill}, speed: {info.player.getSpeed()}, potential damage: {info.player.getDamage()}.\n")
 
 
 def attack_init():
-    #: global info.turnCount
-    if player.getSpeed() > opponent.getSpeed():
+    if info.player.getSpeed() > info.opponent.getSpeed():
         explain("\nYou are faster than your opponent. You attack first.\n")
-    elif player.getSpeed() < opponent.getSpeed():
+    elif info.player.getSpeed() < info.opponent.getSpeed():
         explain("\nYour opponent is faster than you. They attack first.\n")
         info.turnCount += 1
     else:
@@ -66,27 +74,26 @@ def attack_init():
 
 
 def attack():
-    #: global info.turnCount
     chance = random.randrange(0, info.hit_chance)
     if info.turnCount % 2 == 0:
         b = "Your"
-        source = player
-        target = opponent
+        source = info.player
+        target = info.opponent
     else:
         b = "Their"
-        source = opponent
-        target = player
+        source = info.opponent
+        target = info.player
     if source.skill + chance >= info.hit_chance:
         explain(f"{b} attack hits!\n")
         damage_done = round(source.getDamage() - ((target.skill + target.speed) * info.attack_evade_mod))
 
         if damage_done >= 0:
-            print(f"{b} damage done was: {damage_done}.")
+            print(f"{b} damage done was {damage_done}.")
             target.takeDamage(damage_done)
         else:
             print(f"You did 1 damage.")
             target.takeDamage(1)
-        explain(f"{target.name} has {target.health} left.\n")
+        explain(f"{target.name} has {target.health} health left.\n")
     else:
         explain(f"{b} attack misses.\n")
     win_condition()
@@ -94,21 +101,21 @@ def attack():
     attack()
 
 def win_condition():
-    if opponent.health <= 0:
+    if info.opponent.health <= 0:
         explain("\n\n\n\t\t\t\t\tYou win!\n\n\n\n\n")
         quit()
-    elif player.health <= 0:
+    elif info.player.health <= 0:
         explain("\n\n\n\t\t\t\t\tYou lose.\n\n\n\n\n")
         quit()
 
-
-pl_name = input("What is your name?\n> ")
-player = classes.Contestant(pl_name, 5, 5, 5)
-opponent = info.contestants_ls[0]
+def explanation():
 check_explain = input("Would you like an explanation of how this works?\n> ")
 if check_explain.lower() == "yes":
     fight_explain()
 
+
+explanation()
+classes.get_player_name()
 weapon_pick()
 arena_enter()
 combat_stats()
