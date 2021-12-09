@@ -57,16 +57,15 @@ def arena_enter():
     opponent_input_check()
     info.opponent = info.contestants_ls[info.valid_opponent_input - 1]
     info.opponent.weapon = random.choice(info.weapon_ls)
-    explain(f"\n{info.opponent.name} will be fighting you with a {info.opponent.weapon.name}, which is a {info.opponent.weapon.w_type} weapon. Good luck!\n")
+    info.opponent.armor = random.choice(info.armor_ls)
+    explain(f"\n{info.opponent.name} will be fighting you with a {info.opponent.weapon.name}, which is a {info.opponent.weapon.w_type} weapon. They are also equipped with {info.opponent.armor.name}. Good luck!\n")
 
 def combat_stats():
-    print(f"Your opponent is using a {info.opponent.weapon.w_type} weapon.")
-    print(f"{info.opponent.name}'s skill: {info.opponent.skill}, speed: {info.opponent.speed}, strength: {info.opponent.strength}.\n")
+    print(f"\n{info.opponent.name}'s skill: {info.opponent.skill}, speed: {info.opponent.speed}, strength: {info.opponent.strength}.\n")
     explain(f"{info.player.name}'s skill: {info.player.skill}, speed: {info.player.speed}, strength: {info.player.strength}.\n")
-    print("\nHere's how the weapons of you and your opponent impacted your stats...\n")
-    print(f"Your opponent is using a {info.opponent.weapon.w_type} weapon.")
-    print(f"{info.opponent.name}'s skill: {info.opponent.skill}, speed: {info.opponent.getSpeed()}, potential damage: {info.opponent.getDamage()}.\n")
-    explain(f"{info.player.name}'s skill: {info.player.skill}, speed: {info.player.getSpeed()}, potential damage: {info.player.getDamage()}.\n")
+    print("\nHere's how the weapons and armor of you and your opponent impacted your stats...\n")
+    print(f"\n{info.opponent.name}'s skill: {info.opponent.skill}, speed: {info.opponent.getSpeed()}, potential damage: {info.opponent.getDamage()}, potential defense: {info.opponent.getDefense()}.\n")
+    explain(f"{info.player.name}'s skill: {info.player.skill}, speed: {info.player.getSpeed()}, potential damage: {info.player.getDamage()}, potential defense: {info.player.getDefense()}.\n")
 
 
 def attack_init():
@@ -97,13 +96,13 @@ def attack():
         target = info.player
     if source.skill + chance >= info.hit_chance:
         explain(f"{b} attack hits!\n")
-        damage_done = round(source.getDamage() - ((target.skill + target.speed) * info.attack_evade_mod))
+        damage_done = round(source.getDamage() - (((target.skill + target.speed) * info.attack_evade_mod) + target.getDefense()))
 
         if damage_done >= 0:
-            print(f"{b} damage done was {damage_done}.")
+            print(f"{b} damage done was {damage_done}. {target.name}'s {target.armor.name} blocked {round(target.getDefense())} damage.")
             target.takeDamage(damage_done)
         else:
-            print(f"You did 1 damage.")
+            print(f"1 damage was done.")
             target.takeDamage(1)
         explain(f"{target.name} has {target.health} health left.\n")
     else:

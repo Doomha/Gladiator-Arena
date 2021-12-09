@@ -76,7 +76,9 @@ class Contestant:
     def getDamage(self):
         return float((self.strength + self.weapon.damage)/2)
     def getSpeed(self):
-        return float((self.speed + self.weapon.speed)/2)
+        return float(((self.speed + self.weapon.speed)/2) - (self.armor.defense)/4)
+    def getDefense(self):
+        return float(self.armor.defense/4)
     def takeDamage(self,damage):
         self.health -= damage
 
