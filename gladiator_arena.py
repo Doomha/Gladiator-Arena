@@ -2,6 +2,7 @@ import random
 from sys import exit
 import glad_global_info as info
 import glad_classes as classes
+import glad_items as items
 global opponent
 
 def explain(info):

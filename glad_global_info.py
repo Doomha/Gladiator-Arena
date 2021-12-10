@@ -1,9 +1,10 @@
 import random
 from sys import exit
 import glad_classes as classes
+import glad_items as items
 
-weapon_ls = [classes.Sword(), classes.Bow(), classes.Spear(), classes.Rock()]
-armor_ls = [classes.Chainmail(), classes.Platemail(), classes.Tunic()]
+weapon_ls = [items.Sword(), items.Bow(), items.Spear(), items.Rock()]
+armor_ls = [items.Chainmail(), items.Platemail(), items.Tunic()]
 contestants_ls = [classes.Contestant("James", 4, 8, 7), classes.Contestant("Jack", 6, 6, 6), classes.Contestant("Jaxon", 8, 7, 5)]
 attack_evade_mod = 0.1
 hit_chance = 10

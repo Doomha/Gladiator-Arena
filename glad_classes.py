@@ -1,67 +1,7 @@
 import random
 from sys import exit
 import glad_global_info as info
-
-class Weapon:
-    def __init__(self, name, w_type, speed, damage):
-        self.name = name
-        self.w_type = w_type
-        self.speed = speed
-        self.damage = damage
-
-class Ranged_weapon(Weapon):
-    def __init__(self, name, speed, damage, w_range):
-        super().__init__(name, "ranged", speed, damage)
-        self.w_range = w_range
-
-class Bow(Ranged_weapon):
-    def __init__(self):
-        super().__init__("Bow", 5, 5, 8)
-
-class Melee_weapon(Weapon):
-    def __init__(self, name, speed, damage, w_power):
-        super().__init__(name, "melee", speed, damage)
-        self.w_power = w_power
-
-class Sword(Melee_weapon):
-    def __init__(self):
-        super().__init__("Sword", 4, 7, 5)
-
-class Spear(Melee_weapon):
-    def __init__(self):
-        super().__init__("Spear", 6, 4, 3)
-
-class Rock(Melee_weapon):
-    def __init__(self):
-        super().__init__("Rock", 1, 1, 1)
-
-class Magic_weapon(Weapon):
-    def __init__(self, name, speed, damage, power):
-        super().__init__(name, speed, damage)
-        self.power = power
-
-class Armor:
-    def __init__(self, name, defense, weight):
-        self.name = name
-        self.defense = defense
-        self.weight = weight
-
-class Chainmail(Armor):
-    def __init__(self):
-        super().__init__("Chainmail", 3, 4)
-
-class Platemail(Armor):
-    def __init__(self):
-        super().__init__("Platemail", 5, 6)
-
-class Tunic(Armor):
-    def __init__(self):
-        super().__init__("Tunic", 0, 0)
-
-class Magic_armor(Armor):
-    def __init__(self, name, defense, weight, a_magic_buff):
-        super().__init__(name, defense, weight)
-        self.a_magic_buff = a_magic_buff
+import glad_items as items
 
 class Contestant:
     def __init__(self, name, skill, speed, strength):
@@ -72,6 +12,7 @@ class Contestant:
         self.health = 10
         self.weapon = None
         self.armor = None
+
     #: Effectively the battle forumla.
     def getDamage(self):
         return float((self.strength + self.weapon.damage)/2)
