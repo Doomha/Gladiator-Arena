@@ -11,4 +11,5 @@ turnCount = 0
 valid_opponent_input = 0
 opponent = None
 pl_name = None
-player = classes.Contestant(pl_name, 5, 5, 5)
+start_health = None #: This gets used to reset player health for new fight
+player = classes.Contestant(pl_name, 10, 10, 10)

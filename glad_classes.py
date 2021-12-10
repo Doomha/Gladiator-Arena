@@ -93,3 +93,4 @@ class Stats:
 def get_player_name():
     info.pl_name = input("What is your name?\n> ")
     info.player.name = info.pl_name
+    info.start_health = info.player.health

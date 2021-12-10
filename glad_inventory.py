@@ -26,23 +26,21 @@ class Person():
 
     def person_check(self):
         if self.pl_controlled == False:
-            person = vendor
+            pass
         else:
-            person = player
+            pass
 
     def ls_inventory(self):
         a = 0
-        if self.pl_controlled == False: #: Should be person_check()
-            person = vendor
-        else:
-            person = player
-
-        for items in person.pouch:
-            if person.pouch[a].amount == 0:
+        print(f"\n{self.name}'s inventory:")
+        print("-" * 10)
+        for items in self.pouch:
+            if self.pouch[a].amount == 0:
                 pass
             else:
-                print(f"{person.pouch[a].name}: {person.pouch[a].amount}")
+                print(f"{self.pouch[a].name}: {self.pouch[a].amount}")
             a += 1
+        print("-" * 10, "\n")
 
     def drink_potion(self):
         if self.potion.amount >= 1:
@@ -51,8 +49,6 @@ class Person():
             print(f"{self.name} has {self.potion.amount} potions left.")
         else:
             print(f"{self.name} does not have any potions right now.")
-#: def trade_item_select():
-
 
 
 player = Person("John", 50, 0, True)

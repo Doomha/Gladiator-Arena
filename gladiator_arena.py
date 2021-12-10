@@ -112,11 +112,29 @@ def attack():
     attack()
 
 def win_condition():
-    if info.opponent.health <= 0:
-        explain("\n\n\n\t\t\t\t\tYou win!\n\n\n\n\n")
+    if info.opponent.health <= 0 and (len(info.contestants_ls) - 1) > 0:
+        c = info.contestants_ls.index(info.opponent)
+        info.contestants_ls.pop(c)
+        explain(f"\nYou beat {info.opponent.name}!\n")
+        play_again()
+        quit()
+    elif info.opponent.health <= 0 and (len(info.contestants_ls) - 1) == 0:
+        print(f"\n\n\t\t\t\t\tYou beat {info.opponent.name}!")
+        explain("\n\n\t\t\t\t\tYou win!\n\n\n\n\n")
         quit()
     elif info.player.health <= 0:
         explain("\n\n\n\t\t\t\t\tYou lose.\n\n\n\n\n")
+        quit()
+
+def play_again():
+
+    r = input("\nWould you like to play again?\n> ")
+    if r.lower() == "yes":
+        info.player.health = info.start_health
+        arena_enter()
+        combat_stats()
+        attack_init()
+    else:
         quit()
 
 def explanation():
