@@ -1,5 +1,5 @@
-#: Keep track of all items in inventory (Contestants have them,
-#: so that means that it would be a sub element of a Contestant)
+from sys import exit
+
 class Item():
     def __init__(self, name, value, tradable, limit, amount):
         self.name = name
@@ -16,70 +16,43 @@ class Potion(Item):
     def __init__(self, amount):
         super().__init__("potions", 5, True, 5, amount)
 
-starting_gold = 50
-
-gold1 = Gold(starting_gold)
-gold2 = Gold(35)
-potion1 = Potion(0)
-
-pouch = [gold1, potion1]
-
 class Person():
-    def __init__(self, name, age, gender):
+    def __init__(self, name, gold, potion, gender, pl_controlled):
         self.name = name
-        self.age = age
+        self.gold = Gold(gold)
+        self.potion = Potion(potion)
         self.gender = gender
-        self.pouch = pouch
+        self.pl_controlled = pl_controlled
+        self.pouch = [Gold(gold), Potion(potion)]
 
-    def inventory_ls(self):
+    def person_check(self):
+        if self.pl_controlled == False:
+            person = vendor
+            print(person.name)
+        else:
+            person = player
+            print(person.name)
+
+    def ls_inventory(self):
         a = 0
-        for items in pouch:
-            if pouch[a].amount == 0:
+        if self.pl_controlled == False: #: Should be person_check()
+            person = vendor
+        else:
+            person = player
+
+        for items in person.pouch:
+            if person.pouch[a].amount == 0:
                 pass
             else:
-                print(pouch[a].name)
+                print(f"{person.pouch[a].name}: {person.pouch[a].amount}")
             a += 1
 
 
+player = Person("John", 50, 0, "male", True)
+player.ls_inventory()
+print(len(player.pouch))
+player.person_check()
 
-person1 = Person("John", 32, "male")
-person1.inventory_ls()
-
-#: print(f"First item is: {items_ls[0].name}. Their value is: {items_ls[0].value}.")
-
-print(f"{potion1.name}'s cost {potion1.value} each.")
-print(f"You can buy up to {potion1.limit} of them. Would you like to buy one?")
-potion_buy = input("> ")
-if potion_buy == "yes":
-    gold1.amount -= int(potion1.value)
-    gold2.amount += int(potion1.value)
-    print(items_ls[0].amount, gold2.amount)
-    potion1.amount += 1
-    print(potion1.amount)
-
-
-
-"""
-pouch = Inventory(10, 1, 3)
-print(f"This person has {pouch.gold} gold coins.")
-
-class Person():
-    def __init__(self, name, age, gender):
-        self.name = name
-        self.age = age
-        self.gender = gender
-        self.pouch = pouch
-
-adventurer = Person("John Smith", 32, "male")
-print(f"The adventurer's name is {adventurer.name}, and they have {pouch.gold} gold coins.")
-
-def hide_contents():
-    for item in pouch:
-        if pouch(item) != 0:
-            print()
-"""
-"""class Inventory():
-    def __init__(self, gold, javelins, healing_potions):
-        self.gold = gold
-        self.javelins = javelins
-        self.healing_potions = healing_potions"""
+vendor = Person("Ginger", 100, 5, "female", False)
+vendor.ls_inventory()
+print(type(vendor.pouch))
