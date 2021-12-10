@@ -17,21 +17,18 @@ class Potion(Item):
         super().__init__("potions", 5, True, 5, amount)
 
 class Person():
-    def __init__(self, name, gold, potion, gender, pl_controlled):
+    def __init__(self, name, gold, potion, pl_controlled):
         self.name = name
         self.gold = Gold(gold)
         self.potion = Potion(potion)
-        self.gender = gender
         self.pl_controlled = pl_controlled
         self.pouch = [Gold(gold), Potion(potion)]
 
     def person_check(self):
         if self.pl_controlled == False:
             person = vendor
-            print(person.name)
         else:
             person = player
-            print(person.name)
 
     def ls_inventory(self):
         a = 0
@@ -47,12 +44,14 @@ class Person():
                 print(f"{person.pouch[a].name}: {person.pouch[a].amount}")
             a += 1
 
+#: def trade_item_select():
 
-player = Person("John", 50, 0, "male", True)
-player.ls_inventory()
-print(len(player.pouch))
-player.person_check()
 
-vendor = Person("Ginger", 100, 5, "female", False)
-vendor.ls_inventory()
-print(type(vendor.pouch))
+
+player = Person("John", 50, 0, True)
+vendor = Person("Ginger", 100, 3, False)
+contestant1 = Person("Harry", 35, 1, False)
+
+contestant1.ls_inventory()
+contestant1.gold.amount -= 10
+print(f"{contestant1.name} has {contestant1.gold.amount} left.")
