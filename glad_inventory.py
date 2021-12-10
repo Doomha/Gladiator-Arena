@@ -28,6 +28,9 @@ class Person():
             a += 1
         print("-" * 10, "\n")
 
+    def consume_item():
+        quit()
+
     def drink_potion(self):
         if self.potion.amount >= 1:
             self.potion.amount -= 1
@@ -41,19 +44,18 @@ class Person():
         item_location = len(self.pouch) - 1
         if item_picked.lower() == "gold":
             print("This isn't something you can consume.")
-            exit()
         else:
-            pass
-        for n in self.pouch:
-            if self.pouch[item_location].name == item_picked:
-                print(self.pouch[item_location].name)
-                consume_item()
-            elif item_location == 0:
-                print("It looks like that item doesn't exist.")
-            item_location -= 1
+            for n in self.pouch:
+                if self.pouch[item_location].name == item_picked:
+                    print(self.pouch[item_location].name)
+                    print(item_location)
+                    break
+                elif item_location == 0:
+                    print("It looks like that item doesn't exist.")
+                item_location -= 1
 
-    def consume_item():
-
+    """def item_quantity_check(self):
+        item_picked"""
 
 player = Person("John", 50, 0, 1, True)
 vendor = Person("Ginger", 100, 3, 1, False)
@@ -64,3 +66,4 @@ contestant1.gold.amount -= 10
 contestant1.drink_potion()
 print(f"{contestant1.name} has {contestant1.gold.amount} left.")
 contestant1.consumption_pick()
+print("Hello!")

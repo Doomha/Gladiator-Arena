@@ -12,8 +12,8 @@ def explain(info):
 def fight_explain():
     explain("\tWelcome to the fighting pits! Your goal is to reduce your opponents' health to 0. Contestants, including yourself, start with 10 health points, so don't worry if your opponent hits you every so often. This is a game of survival, not (necessarily) who hits first!")
     explain("\n\tThere are a couple of other stats that will be important to remember...")
-    explain("\n\nSkill: The chance one of your attacks hits your opponent.")
-    explain("\nSpeed: Decides who gets to attack first.")
+    explain("\n\nSkill: The chance one of your attacks hits your opponent. Also helps you dodge your opponent's attacks.")
+    explain("\nSpeed: Decides who gets to attack first. Also helps you dodge your opponent's attacks.")
     explain("\nStrength: How hard one of your attacks hits, once it connects with your opponent.")
     explain("\n\n\tThat being said, your equipment has an impact on your stats as well. Choose a cumbersome weapon, and your Speed will go down. Attack with something small, and your Strength doesn't do much good.\n\n\t\t\t\t\tGood luck!\n\n")
     explain("\n\n\n\n\n")
@@ -121,22 +121,36 @@ def win_condition():
         quit()
     elif info.opponent.health <= 0 and (len(info.contestants_ls) - 1) == 0:
         print(f"\n\n\t\t\t\t\tYou beat {info.opponent.name}!")
-        explain("\n\n\t\t\t\t\tYou win!\n\n\n\n\n")
+        print("\n\n\t\t\t\t\tYou win!\n\n\n\n\n")
         quit()
     elif info.player.health <= 0:
-        explain("\n\n\n\t\t\t\t\tYou lose.\n\n\n\n\n")
-        quit()
+        print("\n\n\n\t\t\t\t\tYou lose.\n\n\n\n\n")
+        r = input("Would you like to play again?\n> ")
+        if r.lower() == "yes" or r.lower() == "y":
+            info.player.health = info.start_health
+            info.opponent.health = info.start_health
+            classes.get_player_name()
+            weapon_pick()
+            armor_pick()
+            arena_enter()
+            combat_stats()
+            attack_init()
+        else:
+            quit()
 
 def play_again():
-
     r = input("\nWould you like to play again?\n> ")
-    if r.lower() == "yes":
+    if r.lower() == "yes" or r.lower() == "y":
         info.player.health = info.start_health
         arena_enter()
         combat_stats()
         attack_init()
     else:
-        quit()
+        q = input("Are you sure? Type 'q' to quit.\n> ")
+        if q.lower() == "q":
+            quit()
+        else:
+            play_again()
 
 def explanation():
     check_explain = input("Would you like an explanation of how this works?\n> ")

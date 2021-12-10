@@ -13,4 +13,4 @@ valid_opponent_input = 0
 opponent = None
 pl_name = None
 start_health = None #: This gets used to reset player health for new fight
-player = classes.Contestant(pl_name, 10, 10, 10)
+player = classes.Contestant(pl_name, 6, 6, 6)
