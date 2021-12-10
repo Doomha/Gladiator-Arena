@@ -36,6 +36,24 @@ class Person():
         else:
             print(f"{self.name} does not have any potions right now.")
 
+    def consumption_pick(self):
+        item_picked = input("What would you like to consume?\n> ")
+        item_location = len(self.pouch) - 1
+        if item_picked.lower() == "gold":
+            print("This isn't something you can consume.")
+            exit()
+        else:
+            pass
+        for n in self.pouch:
+            if self.pouch[item_location].name == item_picked:
+                print(self.pouch[item_location].name)
+                consume_item()
+            elif item_location == 0:
+                print("It looks like that item doesn't exist.")
+            item_location -= 1
+
+    def consume_item():
+
 
 player = Person("John", 50, 0, 1, True)
 vendor = Person("Ginger", 100, 3, 1, False)
@@ -45,3 +63,4 @@ contestant1.ls_inventory()
 contestant1.gold.amount -= 10
 contestant1.drink_potion()
 print(f"{contestant1.name} has {contestant1.gold.amount} left.")
+contestant1.consumption_pick()
