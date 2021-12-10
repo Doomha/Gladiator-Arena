@@ -28,34 +28,40 @@ class Person():
             a += 1
         print("-" * 10, "\n")
 
-    def consume_item():
-        quit()
-
-    def drink_potion(self):
-        if self.potion.amount >= 1:
-            self.potion.amount -= 1
-            print(f"{self.name} consumed a potion.")
-            print(f"{self.name} has {self.potion.amount} potions left.")
-        else:
-            print(f"{self.name} does not have any potions right now.")
-
-    def consumption_pick(self):
+    def consume_item(self):
         item_picked = input("What would you like to consume?\n> ")
         item_location = len(self.pouch) - 1
-        if item_picked.lower() == "gold":
+        #: does this thing exist?
+        for n in self.pouch:
+            if self.pouch[item_location].name == item_picked.lower():
+                break
+            elif item_location == 0:
+                print("It looks like that item doesn't exist.")
+            item_location -= 1
+        #: can I consume it?
+        if (self.pouch[item_location].consumable) == False:
             print("This isn't something you can consume.")
+            able = False
         else:
-            for n in self.pouch:
-                if self.pouch[item_location].name == item_picked:
-                    print(self.pouch[item_location].name)
-                    print(item_location)
-                    break
-                elif item_location == 0:
-                    print("It looks like that item doesn't exist.")
-                item_location -= 1
+            able = True
+        #: do I have enough in inventory?
+        if able == False:
+            pass
+        else:
+            if self.pouch[item_location].amount == 0:
+                print(f"You don't have enough {self.pouch[item_location].name}.")
+            else:
+                print(f"Good to go! Enjoy your {self.pouch[item_location].name}.")
+                print(item_location)
+        #: actually consume the item
+        if able == False:
+            pass
+        else:
+            self.pouch[item_location].amount -= 1
+            print("What a tasty treat!")
+            print(f"{self.name} now has {self.pouch[item_location].amount} left.")
 
-    """def item_quantity_check(self):
-        item_picked"""
+
 
 player = Person("John", 50, 0, 1, True)
 vendor = Person("Ginger", 100, 3, 1, False)
@@ -63,7 +69,6 @@ contestant1 = Person("Harry", 35, 1, 1, False)
 
 contestant1.ls_inventory()
 contestant1.gold.amount -= 10
-contestant1.drink_potion()
 print(f"{contestant1.name} has {contestant1.gold.amount} left.")
-contestant1.consumption_pick()
+contestant1.consume_item()
 print("Hello!")

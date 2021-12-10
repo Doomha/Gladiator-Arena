@@ -1,28 +1,29 @@
 class Item():
-    def __init__(self, name, value, tradable, limit, amount):
+    def __init__(self, name, value, tradable, limit, amount, consumable):
         self.name = name
         self.value = value
         self.tradable = tradable
         self.limit = limit
         self.amount = amount
+        self.consumable = consumable
 
 #:Non-weapon items
 class Gold(Item):
     def __init__(self, amount):
-        super().__init__("gold", 1, True, 100, amount)
+        super().__init__("gold", 1, True, 100, amount, False)
 
 class Potion(Item):
     def __init__(self, amount):
-        super().__init__("potions", 5, True, 5, amount)
+        super().__init__("potions", 5, True, 5, amount, True)
 
 class Ale(Item):
     def __init__(self, amount):
-        super().__init__("ale", 10, True, 5, amount)
+        super().__init__("ale", 10, True, 5, amount, True)
 
 #: Weapons
 class Weapon(Item):
     def __init__(self, name, value, w_type, speed, damage):
-        super().__init__(name, value, True, 1, 1)
+        super().__init__(name, value, True, 1, 1, False)
         self.w_type = w_type
         self.speed = speed
         self.damage = damage
@@ -61,7 +62,7 @@ class Magic_weapon(Weapon):
 #: Armor items
 class Armor(Item):
     def __init__(self, name, value, defense, weight):
-        super().__init__(name, value, True, 1, 1)
+        super().__init__(name, value, True, 1, 1, False)
         self.defense = defense
         self.weight = weight
 
