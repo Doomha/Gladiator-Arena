@@ -44,6 +44,13 @@ class Person():
                 print(f"{person.pouch[a].name}: {person.pouch[a].amount}")
             a += 1
 
+    def drink_potion(self):
+        if self.potion.amount >= 1:
+            self.potion.amount -= 1
+            print(f"{self.name} consumed a potion.")
+            print(f"{self.name} has {self.potion.amount} potions left.")
+        else:
+            print(f"{self.name} does not have any potions right now.")
 #: def trade_item_select():
 
 
@@ -54,4 +61,5 @@ contestant1 = Person("Harry", 35, 1, False)
 
 contestant1.ls_inventory()
 contestant1.gold.amount -= 10
+contestant1.drink_potion()
 print(f"{contestant1.name} has {contestant1.gold.amount} left.")

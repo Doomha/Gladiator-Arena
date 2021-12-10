@@ -49,7 +49,7 @@ def arena_enter():
     def opponent_input_check():
         opponent_input = input("Please type the number of the contestant you would like to duel.\n> ")
         if opponent_input.isnumeric() != True or int(opponent_input) > count or int(opponent_input) <= 0:
-            explain("\nIf looks like you haven't typed in a valid number. Please try again.\n")
+            print("It looks like you haven't typed in a valid number. Please try again.\n")
             opponent_input_check()
         else:
             info.valid_opponent_input = int(opponent_input)
