@@ -2,7 +2,7 @@ from sys import exit
 import glad_items as items
 
 class Person():
-    def __init__(self, name, gold, potion, ale, pl_controlled):
+    def __init__(self, name, pl_controlled, gold, potion, ale):
         self.name = name
         self.gold = items.Gold(gold)
         self.potion = items.Potion(potion)
@@ -60,15 +60,3 @@ class Person():
             self.pouch[item_location].amount -= 1
             print("What a tasty treat!")
             print(f"{self.name} now has {self.pouch[item_location].amount} left.")
-
-
-
-player = Person("John", 50, 0, 1, True)
-vendor = Person("Ginger", 100, 3, 1, False)
-contestant1 = Person("Harry", 35, 1, 1, False)
-
-contestant1.ls_inventory()
-contestant1.gold.amount -= 10
-print(f"{contestant1.name} has {contestant1.gold.amount} left.")
-contestant1.consume_item()
-print("Hello!")

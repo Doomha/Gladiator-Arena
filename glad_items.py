@@ -68,11 +68,11 @@ class Armor(Item):
 
 class Chainmail(Armor):
     def __init__(self):
-        super().__init__("Chainmail", 3, 2, 3)
+        super().__init__("Chainmail", 3, 4, 3)
 
 class Platemail(Armor):
     def __init__(self):
-        super().__init__("Platemail", 4, 6, 6)
+        super().__init__("Platemail", 5, 8, 6)
 
 class Tunic(Armor):
     def __init__(self):

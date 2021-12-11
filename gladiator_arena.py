@@ -3,6 +3,7 @@ from sys import exit
 import glad_global_info as info
 import glad_classes as classes
 import glad_items as items
+import glad_inventory as inventory
 global opponent
 
 def explain(info):

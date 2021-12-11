@@ -2,17 +2,18 @@ import random
 from sys import exit
 import glad_global_info as info
 import glad_items as items
+import glad_inventory as inventory
 
-class Contestant:
-    def __init__(self, name, skill, speed, strength):
-        self.name = name
+
+class Contestant(inventory.Person):
+    def __init__(self, name, pl_controlled, skill, speed, strength, gold, potion, ale):
+        super().__init__(name, pl_controlled, gold, potion, ale)
         self.skill = skill
         self.speed = speed
         self.strength = strength
         self.health = 10
         self.weapon = None
         self.armor = None
-
     #: Effectively the battle forumla.
     def getDamage(self):
         return float((self.strength + self.weapon.damage)/2)
