@@ -6,8 +6,8 @@ import glad_inventory as inventory
 
 
 class Contestant(inventory.Person):
-    def __init__(self, name, pl_controlled, skill, speed, strength, gold, potion, ale):
-        super().__init__(name, pl_controlled, gold, potion, ale)
+    def __init__(self, name, pl_controlled, skill, speed, strength, gold, potion, sweetcakes):
+        super().__init__(name, pl_controlled, gold, potion, sweetcakes)
         self.skill = skill
         self.speed = speed
         self.strength = strength

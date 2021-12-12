@@ -16,9 +16,9 @@ class Potion(Item):
     def __init__(self, amount):
         super().__init__("potions", 5, True, 5, amount, True)
 
-class Ale(Item):
+class Sweetcakes(Item):
     def __init__(self, amount):
-        super().__init__("ale", 10, True, 5, amount, True)
+        super().__init__("sweetcakes", 10, True, 5, amount, True)
 
 #: Weapons
 class Weapon(Item):

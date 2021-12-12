@@ -2,19 +2,13 @@ from sys import exit
 import glad_items as items
 
 class Person():
-    def __init__(self, name, pl_controlled, gold, potion, ale):
+    def __init__(self, name, pl_controlled, gold, potion, sweetcakes):
         self.name = name
         self.gold = items.Gold(gold)
         self.potion = items.Potion(potion)
-        self.ale = items.Ale(ale)
+        self.sweetcakes = items.Sweetcakes(sweetcakes)
         self.pl_controlled = pl_controlled
-        self.pouch = [self.gold, self.potion, self.ale]
-
-    def person_check(self):
-        if self.pl_controlled == False:
-            pass
-        else:
-            pass
+        self.pouch = [self.gold, self.potion, self.sweetcakes]
 
     def ls_inventory(self):
         a = 0
@@ -60,3 +54,10 @@ class Person():
             self.pouch[item_location].amount -= 1
             print("What a tasty treat!")
             print(f"{self.name} now has {self.pouch[item_location].amount} left.")
+
+
+    def person_check(self):
+        if self.pl_controlled == False:
+            pass
+        else:
+            pass
