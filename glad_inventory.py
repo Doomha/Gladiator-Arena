@@ -22,33 +22,39 @@ class Person():
             a += 1
         print("-" * 10, "\n")
 
-    def consume_item(self):
+        #: does this thing exist?
+    def item_exist(self):
         item_picked = input("What would you like to consume?\n> ")
         item_location = len(self.pouch) - 1
-        #: does this thing exist?
         for n in self.pouch:
             if self.pouch[item_location].name == item_picked.lower():
                 break
             elif item_location == 0:
                 print("It looks like that item doesn't exist.")
             item_location -= 1
+
         #: can I consume it?
+    def item_consume_check(self):
+        item_location = len(self.pouch) - 1
         if (self.pouch[item_location].consumable) == False:
             print("This isn't something you can consume.")
-            able = False
+            return(False)
         else:
-            able = True
-        #: do I have enough in inventory?
-        if able == False:
             pass
-        else:
+
+        #: do I have enough in inventory?
+    def item_inventory_check(self):
+            item_location = len(self.pouch) - 1
             if self.pouch[item_location].amount == 0:
                 print(f"You don't have enough {self.pouch[item_location].name}.")
+                return(False)
             else:
-                print(f"Good to go! Enjoy your {self.pouch[item_location].name}.")
-                print(item_location)
+                pass
+
         #: actually consume the item
-        if able == False:
+    def consume_item(self):
+        item_location = len(self.pouch) - 1
+        if (self.pouch[item_location].consumable) == False:
             pass
         else:
             self.pouch[item_location].amount -= 1

@@ -118,9 +118,10 @@ def attack():
             print(f"1 damage was done.")
             target.takeDamage(1)
         explain(f"{target.name} has {target.health} health left.\n")
+        use_inventory()
+        win_condition()
     else:
         explain(f"{b} attack misses.\n")
-    win_condition()
     info.turnCount += 1
     attack()
 
@@ -169,6 +170,22 @@ def explanation():
     check_explain = input("Would you like an explanation of how this works?\n> ")
     if check_explain.lower() == "yes":
         fight_explain()
+
+def use_inventory():
+    a = input("Would you like to view your inventory?\n> ")
+    if a.lower() != "yes":
+        return
+    elif a.lower() == "yes":
+        info.player.ls_inventory()
+        b = input("Would you like to use an item?\n> ")
+        if b.lower() != "yes":
+            return
+        elif b.lower() == "yes":
+            pass
+            info.player.item_exist()
+            info.player.item_consume_check()
+            info.player.item_inventory_check()
+            info.player.consume_item()
 
 
 explanation()

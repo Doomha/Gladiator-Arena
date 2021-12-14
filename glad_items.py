@@ -55,10 +55,6 @@ class Rock(Melee_weapon):
         super().__init__("Rock", 1, 1, 1)
 
 
-class Magic_weapon(Weapon):
-    def __init__(self, name, value, speed, damage):
-        super().__init__(name, value, "magic", speed, damage)
-
 #: Armor items
 class Armor(Item):
     def __init__(self, name, value, defense, weight):
