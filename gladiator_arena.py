@@ -210,7 +210,6 @@ def win_condition():
 def play_again():
     r = input("\nWould you like to play again? Your combat stats will reset, but your health will remain the same.\n> ")
     if r.lower() == "yes" or r.lower() == "y":
-        info.player.health = info.health_reset
         info.player.strength = info.strength_reset
         info.player.defense = info.defense_reset
         info.player.speed = info.speed_reset
