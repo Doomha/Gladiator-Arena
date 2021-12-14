@@ -4,13 +4,15 @@ import glad_global_info as info
 
 
 class Person():
-    def __init__(self, name, pl_controlled, gold, potion, sweetcakes):
+    def __init__(self, name, pl_controlled, gold, strength_potion, defense_potion, speed_potion, sweetcakes):
         self.name = name
         self.gold = items.Gold(gold)
-        self.potion = items.Potion(potion)
+        self.strength_potion = items.StrengthPotion(strength_potion)
+        self.defense_potion = items.DefensePotion(defense_potion)
+        self.speed_potion = items.SpeedPotion(speed_potion)
         self.sweetcakes = items.Sweetcakes(sweetcakes)
         self.pl_controlled = pl_controlled
-        self.pouch = [self.gold, self.potion, self.sweetcakes]
+        self.pouch = [self.gold, self.strength_potion, self.defense_potion, self.speed_potion, self.sweetcakes]
 
     def ls_inventory(self):
         a = 0
@@ -26,9 +28,16 @@ class Person():
     def item_exist(self):
         global item_locator
         item_locator = len(self.pouch) - 1
-        item_picked = input("What would you like to consume?\n> ")
+        p = input("What would you like to consume?\n> ")
+        item_picked = p.lower()
         for n in self.pouch:
-            if self.pouch[item_locator].name == item_picked.lower():
+            print(self.pouch[item_locator].name)
+            print(item_picked)
+            print(self.pouch[item_locator].name[0: -1])
+            print(item_locator)
+            if self.pouch[item_locator].name == item_picked:
+                break
+            elif self.pouch[item_locator].name[0: -1] == item_picked:
                 break
             elif item_locator == 0:
                 print("It looks like that item doesn't exist.")
@@ -37,7 +46,8 @@ class Person():
 
         #: can I consume it?
     def item_consume_check(self):
-        if (self.pouch[item_locator].heal) == None and (self.pouch[item_locator].attack_buff) == None and (self.pouch[item_locator].defense_buff) == None and (self.pouch[item_locator].speed_buff) == None:
+        w = self.pouch[item_locator]
+        if (w.health_incr) == 0 and (w.strength_incr) == 0 and (w.defense_incr) == 0 and (w.speed_incr) == 0:
             print("This isn't something you can consume.")
             return False
 
@@ -51,12 +61,25 @@ class Person():
     def consume_item(self):
         self.pouch[item_locator].amount -= 1
         print(f"\n{self.name} consumed some {self.pouch[item_locator].name}.\n")
-        input(f"{self.name} now has {self.pouch[item_locator].amount} {self.pouch[item_locator].name} left.\n\nPress 'enter' to continue.")
+        print(f"{self.name} now has {self.pouch[item_locator].amount} {self.pouch[item_locator].name} left.\n")
 
-
-
-    def person_check(self):
-        if self.pl_controlled == False:
-            pass
+    def health_increase_check(self):
+        if self.pouch[item_locator].health_incr != 0:
+            return self.pouch[item_locator].health_incr
         else:
-            pass
+            return False
+    def strength_increase_check(self):
+        if self.pouch[item_locator].strength_incr != 0:
+            return self.pouch[item_locator].strength_incr
+        else:
+            return False
+    def defense_increase_check(self):
+        if self.pouch[item_locator].defense_incr != 0:
+            return self.pouch[item_locator].defense_incr
+        else:
+            return False
+    def speed_increase_check(self):
+        if self.pouch[item_locator].speed_incr != 0:
+            return self.pouch[item_locator].speed_incr
+        else:
+            return False

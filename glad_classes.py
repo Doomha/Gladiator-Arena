@@ -6,25 +6,32 @@ import glad_inventory as inventory
 
 
 class Contestant(inventory.Person):
-    def __init__(self, name, pl_controlled, skill, speed, strength, gold, potion, sweetcakes):
-        super().__init__(name, pl_controlled, gold, potion, sweetcakes)
+    def __init__(self, name, pl_controlled, skill, speed, strength, gold, strength_potion, defense_potion, speed_potion, sweetcakes):
+        super().__init__(name, pl_controlled, gold, strength_potion, defense_potion, speed_potion, sweetcakes)
         self.skill = skill
         self.speed = speed
         self.strength = strength
         self.health = 10
         self.weapon = None
+        self.defense = 0
         self.armor = None
     #: Effectively the battle forumla.
     def getDamage(self):
         return float((self.strength + self.weapon.damage)/2)
     def getSpeed(self):
-        return float(((self.speed + self.weapon.speed)/2) - (self.armor.defense)/4)
+        return float(((self.speed + self.weapon.speed)/2) - (self.armor.weight)/4)
     def getDefense(self):
-        return float(self.armor.defense/4)
+        self.defense = float(self.armor.defense/3.25)
     def takeDamage(self,damage):
         self.health -= damage
-    def healUser(self, heal):
-        self.health += heal_amount
+    def increaseHealth(self, health_incr):
+        self.health += health_incr
+    def increaseStrength(self, strength_incr):
+        self.strength += strength_incr
+    def increaseDefense(self, defense_incr):
+        self.armor.defense += defense_incr
+    def increaseSpeed(self, speed_incr):
+        self.speed += speed_incr
 
 class Stats():
     def __init__(self, skill, speed, damage, health):
@@ -37,4 +44,7 @@ class Stats():
 def get_player_name():
     info.pl_name = input("What is your name?\n> ")
     info.player.name = info.pl_name
-    info.start_health = info.player.health
+    info.health_reset = info.player.health
+    info.strength_reset = info.player.strength
+    info.defense_reset = info.player.defense
+    info.speed_reset = info.player.speed

@@ -1,34 +1,40 @@
 class Item():
-    def __init__(self, name, value, tradable, limit, amount, heal, attack_buff, defense_buff, speed_buff):
+    def __init__(self, name, value, tradable, limit, amount, health_incr, strength_incr, defense_incr, speed_incr):
         self.name = name
         self.value = value
         self.tradable = tradable
         self.limit = limit
         self.amount = amount
-        self.heal = heal
-        self.attack_buff = attack_buff
-        self.defense_buff = defense_buff
-        self.speed_buff = speed_buff
+        self.health_incr = health_incr
+        self.strength_incr = strength_incr
+        self.defense_incr = defense_incr
+        self.speed_incr = speed_incr
 
 #:Non-weapon items
 class Gold(Item):
     def __init__(self, amount):
-        super().__init__("gold", 1, True, 100, amount, None, None, None, None)
+        super().__init__("gold", 1, True, 100, amount, 0, 0, 0, 0)
 
-class Potion(Item):
+class StrengthPotion(Item):
     def __init__(self, amount):
-        super().__init__("potions", 10, True, 5, amount, 5, None, None, None)
-        self.heal_amount = 5
+        super().__init__("strength potions", 10, True, 5, amount, 0, 3, 0, 0)
+
+class DefensePotion(Item):
+    def __init__(self, amount):
+        super().__init__("defense potions", 10, True, 5, amount, 0, 0, 6, 0)
+
+class SpeedPotion(Item):
+    def __init__(self, amount):
+        super().__init__("speed potions", 10, True, 5, amount, 0, 0, 0, 5)
 
 class Sweetcakes(Item):
     def __init__(self, amount):
-        super().__init__("sweetcakes", 5, True, 5, amount, 2, None, None, None)
-        self.heal_amount = 2
+        super().__init__("sweetcakes", 5, True, 5, amount, 2, 0, 0, 0)
 
 #: Weapons
 class Weapon(Item):
     def __init__(self, name, value, w_type, speed, damage):
-        super().__init__(name, value, True, 1, 1, None, None, None, None)
+        super().__init__(name, value, True, 1, 1, 0, 0, 0, 0)
         self.w_type = w_type
         self.speed = speed
         self.damage = damage
@@ -63,7 +69,7 @@ class Rock(Melee_weapon):
 #: Armor items
 class Armor(Item):
     def __init__(self, name, value, defense, weight):
-        super().__init__(name, value, True, 1, 1, None, None, None, None)
+        super().__init__(name, value, True, 1, 1, 0, 0, 0, 0)
         self.defense = defense
         self.weight = weight
 

@@ -17,6 +17,11 @@ def lines_start(content):
 def lines_end(content):
     print(content + ("-" * 10))
 
+def explanation():
+    check_explain = input("Would you like an explanation of how this works?\n> ")
+    if check_explain.lower() == "yes":
+        fight_explain()
+
 def fight_explain():
     explain("\tWelcome to the fighting pits! Your goal is to reduce your opponents' health to 0. Contestants, including yourself, start with 10 health points, so don't worry if your opponent hits you every so often. This is a game of survival, not (necessarily) who hits first!")
     explain("\n\tThere are a couple of other stats that will be important to remember...")
@@ -77,8 +82,10 @@ def combat_stats():
     print(f"\n{info.opponent.name}'s skill: {info.opponent.skill}, speed: {info.opponent.speed}, strength: {info.opponent.strength}.\n")
     explain(f"{info.player.name}'s skill: {info.player.skill}, speed: {info.player.speed}, strength: {info.player.strength}.\n")
     print("\nHere's how the weapons and armor of you and your opponent impacted your stats...\n")
-    print(f"\n{info.opponent.name}'s skill: {info.opponent.skill}, speed: {info.opponent.getSpeed()}, potential damage: {info.opponent.getDamage()}, potential defense: {info.opponent.getDefense()}.\n")
-    explain(f"{info.player.name}'s skill: {info.player.skill}, speed: {info.player.getSpeed()}, potential damage: {info.player.getDamage()}, potential defense: {info.player.getDefense()}.\n")
+    info.opponent.getDefense()
+    info.player.getDefense()
+    print(f"\n{info.opponent.name}'s skill: {round(info.opponent.skill)}, speed: {round(info.opponent.getSpeed())}, damage: {round(info.opponent.getDamage())}, defense: {round(info.opponent.defense)}.\n")
+    explain(f"{info.player.name}'s skill: {round(info.player.skill)}, speed: {round(info.player.getSpeed())}, damage: {round(info.player.getDamage())}, defense: {round(info.player.defense)}.\n")
 
 
 def attack_init():
@@ -109,10 +116,10 @@ def attack():
         target = info.player
     if source.skill + chance >= info.hit_chance:
         explain(f"\n{b}'s attack hits!\n")
-        damage_done = round(source.getDamage() - (((target.skill + target.speed) * info.attack_evade_mod) + target.getDefense()))
+        damage_done = round(source.getDamage() - (((target.skill + target.speed) * info.attack_evade_mod) + target.defense))
 
         if damage_done >= 0:
-            print(f"{b} damage done was {damage_done}. {target.name}'s {target.armor.name} blocked {round(target.getDefense())} damage.")
+            print(f"{b} damage done was {damage_done}. {target.name}'s {target.armor.name} blocked {round(target.defense)} damage.")
             target.takeDamage(damage_done)
         else:
             print(f"1 damage was done.")
@@ -120,12 +127,58 @@ def attack():
         print(f"{target.name} has {target.health} health left.\n")
         win_condition()
         if prompt_inventory() == True:
-            use_inventory()
+            if use_inventory() == True:
+                trigger_item_effect()
 
     else:
         explain(f"{b} attack misses.\n")
     info.turnCount += 1
     attack()
+
+def prompt_inventory():
+    a = input("Would you like to view your inventory?\n> ")
+    if a.lower() != "yes":
+        return
+    elif a.lower() == "yes" or a.lower() == "y":
+        info.player.ls_inventory()
+        b = input("Would you like to use an item?\n> ")
+        if b.lower() != "yes":
+            return False
+        elif b.lower() == "yes" or b.lower() == "y":
+            return True
+
+def use_inventory():
+    if info.player.item_exist() == False:
+        return explain("")
+    if info.player.item_consume_check() == False:
+        return explain("")
+    if info.player.item_inventory_check() == False:
+        return explain("")
+    info.player.consume_item()
+    return True
+
+def trigger_item_effect():
+    if info.player.health_increase_check() > 0:
+        health_incr = info.player.health_increase_check()
+        info.player.increaseHealth(health_incr)
+        explain(f"{info.player.name}'s health increased by {health_incr}, and is now {info.player.health}.\n")
+
+    elif info.player.strength_increase_check() > 0:
+        strength_incr = info.player.strength_increase_check()
+        info.player.increaseStrength(strength_incr)
+        explain(f"{info.player.name}'s strength increased by {strength_incr}, and is now {info.player.strength}.\n")
+
+    elif info.player.defense_increase_check() > 0:
+        defense_incr = info.player.defense_increase_check()
+        info.player.increaseDefense(defense_incr)
+        explain(f"{info.player.name}'s defense increased by {defense_incr}, and is now {info.player.armor.defense}.\n")
+
+    elif info.player.speed_increase_check() > 0:
+        speed_incr = info.player.speed_increase_check()
+        info.player.increaseSpeed(speed_incr)
+        explain(f"{info.player.name}'s speed increased by {speed_incr}, and is now {info.player.speed}.\n")
+    else:
+        pass
 
 def win_condition():
     if info.opponent.health <= 0 and (len(info.contestants_ls) - 1) > 0:
@@ -136,7 +189,7 @@ def win_condition():
         play_again()
     elif info.opponent.health <= 0 and (len(info.contestants_ls) - 1) == 0:
         print(f"\n\n\t\t\t\t\tYou beat {info.opponent.name}!")
-        lines("\n\n\t\t\t\t\tYou win!\n\n\n\n\n")
+        lines_end("\n\n\t\t\t\t\tYou win!\n\n\n\n\n")
         quit()
     elif info.player.health <= 0:
         print("\n\n\n\t\t\t\t\tYou lose.\n\n\n\n\n")
@@ -155,9 +208,12 @@ def win_condition():
             quit()
 
 def play_again():
-    r = input("\nWould you like to play again?\n> ")
+    r = input("\nWould you like to play again? Your combat stats will reset, but your health will remain the same.\n> ")
     if r.lower() == "yes" or r.lower() == "y":
-        info.player.health = info.start_health
+        info.player.health = info.health_reset
+        info.player.strength = info.strength_reset
+        info.player.defense = info.defense_reset
+        info.player.speed = info.speed_reset
         arena_enter()
         combat_stats()
         attack_init()
@@ -168,31 +224,6 @@ def play_again():
         else:
             play_again()
 
-def explanation():
-    check_explain = input("Would you like an explanation of how this works?\n> ")
-    if check_explain.lower() == "yes":
-        fight_explain()
-
-def prompt_inventory():
-    a = input("Would you like to view your inventory?\n> ")
-    if a.lower() != "yes":
-        return
-    elif a.lower() == "yes":
-        info.player.ls_inventory()
-        b = input("Would you like to use an item?\n> ")
-        if b.lower() != "yes":
-            return False
-        elif b.lower() == "yes":
-            return True
-
-def use_inventory():
-    if info.player.item_exist() == False:
-        return explain("")
-    if info.player.item_consume_check() == False:
-        return explain("")
-    if info.player.item_inventory_check() == False:
-        return explain("")
-    info.player.consume_item()
 
 
 
