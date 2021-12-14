@@ -1,32 +1,34 @@
 class Item():
-    def __init__(self, name, value, tradable, limit, amount, consumable, trait):
+    def __init__(self, name, value, tradable, limit, amount, heal, attack_buff, defense_buff, speed_buff):
         self.name = name
         self.value = value
         self.tradable = tradable
         self.limit = limit
         self.amount = amount
-        self.consumable = consumable
-        self.trait = trait
+        self.heal = heal
+        self.attack_buff = attack_buff
+        self.defense_buff = defense_buff
+        self.speed_buff = speed_buff
 
 #:Non-weapon items
 class Gold(Item):
     def __init__(self, amount):
-        super().__init__("gold", 1, True, 100, amount, False, False)
+        super().__init__("gold", 1, True, 100, amount, None, None, None, None)
 
 class Potion(Item):
     def __init__(self, amount):
-        super().__init__("potions", 10, True, 5, amount, True, True)
+        super().__init__("potions", 10, True, 5, amount, 5, None, None, None)
         self.heal_amount = 5
 
 class Sweetcakes(Item):
     def __init__(self, amount):
-        super().__init__("sweetcakes", 5, True, 5, amount, True, True)
+        super().__init__("sweetcakes", 5, True, 5, amount, 2, None, None, None)
         self.heal_amount = 2
 
 #: Weapons
 class Weapon(Item):
     def __init__(self, name, value, w_type, speed, damage):
-        super().__init__(name, value, True, 1, 1, False, False)
+        super().__init__(name, value, True, 1, 1, None, None, None, None)
         self.w_type = w_type
         self.speed = speed
         self.damage = damage
@@ -61,7 +63,7 @@ class Rock(Melee_weapon):
 #: Armor items
 class Armor(Item):
     def __init__(self, name, value, defense, weight):
-        super().__init__(name, value, True, 1, 1, False, False)
+        super().__init__(name, value, True, 1, 1, None, None, None, None)
         self.defense = defense
         self.weight = weight
 

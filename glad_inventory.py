@@ -37,7 +37,7 @@ class Person():
 
         #: can I consume it?
     def item_consume_check(self):
-        if (self.pouch[item_locator].consumable) == False:
+        if (self.pouch[item_locator].heal) == None and (self.pouch[item_locator].attack_buff) == None and (self.pouch[item_locator].defense_buff) == None and (self.pouch[item_locator].speed_buff) == None:
             print("This isn't something you can consume.")
             return False
 
@@ -49,16 +49,11 @@ class Person():
 
         #: actually consume the item
     def consume_item(self):
-        if (self.pouch[item_locator].consumable) != False:
-            self.pouch[item_locator].amount -= 1
-            print(f"\n{self.name} consumed some {self.pouch[item_locator].name}.\n")
-            input(f"{self.name} now has {self.pouch[item_locator].amount} {self.pouch[item_locator].name} left.\n\nPress 'enter' to continue.")
-        else:
-            return False
+        self.pouch[item_locator].amount -= 1
+        print(f"\n{self.name} consumed some {self.pouch[item_locator].name}.\n")
+        input(f"{self.name} now has {self.pouch[item_locator].amount} {self.pouch[item_locator].name} left.\n\nPress 'enter' to continue.")
 
-    def item_effect_check(self):
-        if (self.pouch[item_locator].trait) == False:
-            return False
+
 
     def person_check(self):
         if self.pl_controlled == False:

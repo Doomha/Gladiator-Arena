@@ -192,13 +192,8 @@ def use_inventory():
         return explain("")
     if info.player.item_inventory_check() == False:
         return explain("")
-    if info.player.consume_item() == False:
-        return explain("")
-    item_class = info.player.item_effect_check()
-    if item_class == False:
-        return explain("")
-    else:
-        pass
+    info.player.consume_item()
+
 
 
 explanation()
