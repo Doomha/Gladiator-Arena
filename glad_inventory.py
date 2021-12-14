@@ -1,5 +1,7 @@
 from sys import exit
 import glad_items as items
+import glad_global_info as info
+
 
 class Person():
     def __init__(self, name, pl_controlled, gold, potion, sweetcakes):
@@ -15,52 +17,48 @@ class Person():
         print(f"\n{self.name}'s inventory:")
         print("-" * 10)
         for items in self.pouch:
-            if self.pouch[a].amount == 0:
-                pass
-            else:
+            if self.pouch[a].amount != 0:
                 print(f"{self.pouch[a].name}: {self.pouch[a].amount}")
             a += 1
         print("-" * 10, "\n")
 
         #: does this thing exist?
     def item_exist(self):
+        global item_locator
+        item_locator = len(self.pouch) - 1
         item_picked = input("What would you like to consume?\n> ")
-        item_location = len(self.pouch) - 1
         for n in self.pouch:
-            if self.pouch[item_location].name == item_picked.lower():
+            if self.pouch[item_locator].name == item_picked.lower():
                 break
-            elif item_location == 0:
+            elif item_locator == 0:
                 print("It looks like that item doesn't exist.")
-            item_location -= 1
+                return False
+            item_locator -= 1
 
         #: can I consume it?
     def item_consume_check(self):
-        item_location = len(self.pouch) - 1
-        if (self.pouch[item_location].consumable) == False:
+        if (self.pouch[item_locator].consumable) == False:
             print("This isn't something you can consume.")
-            return(False)
-        else:
-            pass
+            return False
 
         #: do I have enough in inventory?
     def item_inventory_check(self):
-            item_location = len(self.pouch) - 1
-            if self.pouch[item_location].amount == 0:
-                print(f"You don't have enough {self.pouch[item_location].name}.")
-                return(False)
-            else:
-                pass
+            if self.pouch[item_locator].amount == 0:
+                print(f"You don't have enough {self.pouch[item_locator].name}.")
+                return False
 
         #: actually consume the item
     def consume_item(self):
-        item_location = len(self.pouch) - 1
-        if (self.pouch[item_location].consumable) == False:
-            pass
+        if (self.pouch[item_locator].consumable) != False:
+            self.pouch[item_locator].amount -= 1
+            print(f"\n{self.name} consumed some {self.pouch[item_locator].name}.\n")
+            input(f"{self.name} now has {self.pouch[item_locator].amount} {self.pouch[item_locator].name} left.\n\nPress 'enter' to continue.")
         else:
-            self.pouch[item_location].amount -= 1
-            print("What a tasty treat!")
-            print(f"{self.name} now has {self.pouch[item_location].amount} left.")
+            return False
 
+    def item_effect_check(self):
+        if (self.pouch[item_locator].trait) == False:
+            return False
 
     def person_check(self):
         if self.pl_controlled == False:

@@ -108,7 +108,7 @@ def attack():
         source = info.opponent
         target = info.player
     if source.skill + chance >= info.hit_chance:
-        explain(f"{b}'s attack hits!\n")
+        explain(f"\n{b}'s attack hits!\n")
         damage_done = round(source.getDamage() - (((target.skill + target.speed) * info.attack_evade_mod) + target.getDefense()))
 
         if damage_done >= 0:
@@ -117,9 +117,11 @@ def attack():
         else:
             print(f"1 damage was done.")
             target.takeDamage(1)
-        explain(f"{target.name} has {target.health} health left.\n")
-        use_inventory()
+        print(f"{target.name} has {target.health} health left.\n")
         win_condition()
+        if prompt_inventory() == True:
+            use_inventory()
+
     else:
         explain(f"{b} attack misses.\n")
     info.turnCount += 1
@@ -171,7 +173,7 @@ def explanation():
     if check_explain.lower() == "yes":
         fight_explain()
 
-def use_inventory():
+def prompt_inventory():
     a = input("Would you like to view your inventory?\n> ")
     if a.lower() != "yes":
         return
@@ -179,13 +181,24 @@ def use_inventory():
         info.player.ls_inventory()
         b = input("Would you like to use an item?\n> ")
         if b.lower() != "yes":
-            return
+            return False
         elif b.lower() == "yes":
-            pass
-            info.player.item_exist()
-            info.player.item_consume_check()
-            info.player.item_inventory_check()
-            info.player.consume_item()
+            return True
+
+def use_inventory():
+    if info.player.item_exist() == False:
+        return explain("")
+    if info.player.item_consume_check() == False:
+        return explain("")
+    if info.player.item_inventory_check() == False:
+        return explain("")
+    if info.player.consume_item() == False:
+        return explain("")
+    item_class = info.player.item_effect_check()
+    if item_class == False:
+        return explain("")
+    else:
+        pass
 
 
 explanation()

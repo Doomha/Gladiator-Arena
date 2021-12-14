@@ -23,8 +23,10 @@ class Contestant(inventory.Person):
         return float(self.armor.defense/4)
     def takeDamage(self,damage):
         self.health -= damage
+    def healUser(self, heal):
+        self.health += heal_amount
 
-class Stats:
+class Stats():
     def __init__(self, skill, speed, damage, health):
         self.skill = skill
         self.speed = speed
