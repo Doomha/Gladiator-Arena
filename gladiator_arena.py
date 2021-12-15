@@ -63,63 +63,74 @@ def visit_shop():
     if a.lower() != "yes":
         return
     else:
-        shop_inside()
+        shop_loop()
+
+def shop_loop():
+    if shop_inside() != False:
+        if valid_item_shop() != False:
+            if seller_item_check() != False:
+                buy_from_seller()
 
 def shop_inside():
     info.shopkeeper.ls_inventory_prices()
     info.player.ls_inventory()
     b = input("Would you like to buy, sell, or leave?\n> ")
     if b.lower() == "buy" or b.lower() == "b":
-        seller = info.shopkeeper
-        buyer = info.player
-        transaction_verb = "buy"
+        info.seller = info.shopkeeper
+        info.buyer = info.player
+        info.transaction_verb = "buy"
     elif b.lower() == "sell" or b.lower() == "s":
-        seller = info.player
-        buyer = info.shopkeeper
-        transaction_verb = "sell"
+        info.seller = info.player
+        info.buyer = info.shopkeeper
+        info.transaction_verb = "sell"
     else:
-        return
+        return False
+
+def valid_item_shop():
     #: Is the selected item valid?
-    item_find = len(seller.pouch) - 1
-    p = input(f"What would you like to {transaction_verb}?\n> ")
+    info.item_find = len(info.seller.pouch) - 1
+    p = input(f"What would you like to {info.transaction_verb}?\n> ")
     item_picked = p.lower()
-    for n in seller.pouch:
-        if seller.pouch[item_find].name == item_picked:
+    for n in info.seller.pouch:
+        if info.seller.pouch[info.item_find].name == item_picked:
             break
-        elif seller.pouch[item_find].name[0: -1] == item_picked:
+        elif info.seller.pouch[info.item_find].name[0: -1] == item_picked:
             break
-        elif seller.gold.name == item_picked:
-            print(f"You can't {transaction_verb} {seller.gold.name}!")
+        elif info.seller.gold.name == item_picked:
+            print(f"You can't {info.transaction_verb} {info.seller.gold.name}!")
             continue_shopping()
-            return
-        elif item_find == 0:
-            print(f"It looks like {seller.name} doesn't have that item right now.")
+            return False
+        elif info.item_find == 0:
+            print(f"It looks like {info.seller.name} doesn't have that item right now.")
             continue_shopping()
-            return
-        item_find -= 1
+            return False
+        info.item_find -= 1
+
+def seller_item_check():
     #: Does seller have the item?
-    if seller.pouch[item_find].amount == 0:
-        explain(f"{seller.name} doesn't have enough {seller.pouch[item_find].name} right now.")
+    if info.seller.pouch[info.item_find].amount == 0:
+        explain(f"{info.seller.name} doesn't have enough {info.seller.pouch[info.item_find].name} right now.")
         continue_shopping()
-        return
-    elif buyer.gold.amount < seller.pouch[item_find].value:
-        explain(f"{buyer.name} doesn't have enough gold right now.")
+        return False
+    elif info.buyer.gold.amount < info.seller.pouch[info.item_find].value:
+        explain(f"{info.buyer.name} doesn't have enough gold right now.")
         continue_shopping()
-        return
-    else:
-        buyer.gold.amount -= seller.pouch[item_find].value
-        buyer.pouch[item_find].amount += 1
-        seller.pouch[item_find].amount -= 1
-        explain(f"{buyer.name} bought 1 {buyer.pouch[item_find].name} from {seller.name}.\n")
-        continue_shopping()
-        return
+        return False
+
+def buy_from_seller():
+    info.buyer.gold.amount -= info.seller.pouch[info.item_find].value
+    info.buyer.pouch[info.item_find].amount += 1
+    info.seller.pouch[info.item_find].amount -= 1
+    explain(f"{info.buyer.name} bought 1 {info.buyer.pouch[info.item_find].name} from {info.seller.name}.\n")
+    continue_shopping()
+    return
 
 def continue_shopping():
     c = input("Would you like to continue shopping?\n> ")
     if c.lower() == "yes":
-        shop_inside()
+        shop_loop()
     else:
-        return
+        return False
 
 def arena_enter():
     explain(f"\n{info.player.name} enters the arena to roaring applause.\n\nAs {info.player.name} looks around, {info.player.name} notices that there are several other contestants.")
@@ -308,16 +319,16 @@ def play_again():
 
 def opponent_drop():
     a = input(f"Would {info.player.name} like to pick up {info.opponent.name}'s dropped items?\n> ")
-    if a.lower() == "yes":
+    if a.lower() == "yes" or a.lower() == "y":
         b = 0
         for items in info.opponent.pouch:
             if info.opponent.pouch[b].amount != 0:
                 info.player.pouch[b].amount += info.opponent.pouch[b].amount
-                print(f"{info.player.name} picked up {info.opponent.pouch[b].amount} {info.opponent.pouch[b].name}.")
+                print(f"\n{info.player.name} picked up {info.opponent.pouch[b].amount} {info.opponent.pouch[b].name}.")
             b += 1
         info.player.ls_inventory()
     else:
-        c = input("Are you sure? Type 'c' to quit.\n> ")
+        c = input("Are you sure? Type 'c' to continue.\n> ")
         if c.lower() == "c":
             return
         else:
