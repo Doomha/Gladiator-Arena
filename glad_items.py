@@ -65,6 +65,10 @@ class Rock(Melee_weapon):
     def __init__(self):
         super().__init__("Rock", 1, 1, 1)
 
+class Fists(Melee_weapon):
+    def __init__(self):
+        super().__init__("Bare fists", 0, 0, 0)
+
 
 #: Armor items
 class Armor(Item):

@@ -91,23 +91,28 @@ def shop_inside():
         elif seller.gold.name == item_picked:
             print(f"You can't {transaction_verb} {seller.gold.name}!")
             continue_shopping()
+            return
         elif item_find == 0:
             print(f"It looks like {seller.name} doesn't have that item right now.")
             continue_shopping()
+            return
         item_find -= 1
     #: Does seller have the item?
     if seller.pouch[item_find].amount == 0:
         explain(f"{seller.name} doesn't have enough {seller.pouch[item_find].name} right now.")
         continue_shopping()
+        return
     elif buyer.gold.amount < seller.pouch[item_find].value:
         explain(f"{buyer.name} doesn't have enough gold right now.")
         continue_shopping()
+        return
     else:
         buyer.gold.amount -= seller.pouch[item_find].value
         buyer.pouch[item_find].amount += 1
         seller.pouch[item_find].amount -= 1
         explain(f"{buyer.name} bought 1 {buyer.pouch[item_find].name} from {seller.name}.\n")
         continue_shopping()
+        return
 
 def continue_shopping():
     c = input("Would you like to continue shopping?\n> ")
