@@ -6,7 +6,7 @@ import glad_inventory as inventory
 
 weapon_ls = [items.Sword(), items.Bow(), items.Spear(), items.Rock(), items.Fists()]
 armor_ls = [items.Chainmail(), items.Platemail(), items.Tunic()]
-contestants_ls = [classes.Contestant("James", False, 4, 8, 7, 0, 0, 0, 0, 0), classes.Contestant("Jack", False, 6, 6, 6, 0, 0, 0, 0, 0), classes.Contestant("Jaxon", False, 8, 7, 5, 0, 0, 0, 0, 0)]
+contestants_ls = [classes.Contestant("James", False, 4, 8, 7, 6, 0, 0, 0, 1), classes.Contestant("Jack", False, 6, 6, 6, 8, 0, 1, 0, 0), classes.Contestant("Jaxon", False, 8, 7, 5, 10, 0, 1, 0, 0)]
 attack_evade_mod = 0.1
 hit_chance = 10
 turnCount = 0

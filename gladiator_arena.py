@@ -263,7 +263,8 @@ def win_condition():
         c = info.contestants_ls.index(info.opponent)
         info.contestants_ls.pop(c)
         explain(f"\nYou beat {info.opponent.name}!\n")
-        lines_start("")
+        info.opponent.ls_inventory()
+        opponent_drop()
         play_again()
     elif info.opponent.health <= 0 and (len(info.contestants_ls) - 1) == 0:
         print(f"\n\n\t\t\t\t\tYou beat {info.opponent.name}!")
@@ -273,12 +274,16 @@ def win_condition():
         print("\n\n\n\t\t\t\t\tYou lose.\n\n\n\n\n")
         r = input("Would you like to play again?\n> ")
         if r.lower() == "yes":
-            info.player.health = info.start_health
-            info.opponent.health = info.start_health
+            info.player.health = info.health_reset
+            info.opponent.health = info.health_reset
+            info.player.strength = info.strength_reset
+            info.player.defense = info.defense_reset
+            info.player.speed = info.speed_reset
             lines_start("")
             classes.get_player_name()
             weapon_pick()
             armor_pick()
+            visit_shop()
             arena_enter()
             combat_stats()
             attack_init()
@@ -296,10 +301,27 @@ def play_again():
     info.player.strength = info.strength_reset
     info.player.defense = info.defense_reset
     info.player.speed = info.speed_reset
+    visit_shop()
     arena_enter()
     combat_stats()
     attack_init()
 
+def opponent_drop():
+    a = input(f"Would {info.player.name} like to pick up {info.opponent.name}'s dropped items?\n> ")
+    if a.lower() == "yes":
+        b = 0
+        for items in info.opponent.pouch:
+            if info.opponent.pouch[b].amount != 0:
+                info.player.pouch[b].amount += info.opponent.pouch[b].amount
+                print(f"{info.player.name} picked up {info.opponent.pouch[b].amount} {info.opponent.pouch[b].name}.")
+            b += 1
+        info.player.ls_inventory()
+    else:
+        c = input("Are you sure? Type 'c' to quit.\n> ")
+        if c.lower() == "c":
+            return
+        else:
+            opponent_drop()
 
 
 

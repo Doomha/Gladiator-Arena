@@ -67,7 +67,7 @@ class Rock(Melee_weapon):
 
 class Fists(Melee_weapon):
     def __init__(self):
-        super().__init__("Bare fists", 0, 0, 0)
+        super().__init__("Bare fists", 0, 8, 0)
 
 
 #: Armor items
@@ -87,4 +87,4 @@ class Platemail(Armor):
 
 class Tunic(Armor):
     def __init__(self):
-        super().__init__("Tunic", 0, 0, 0)
+        super().__init__("Tunic", 0, 0, 1)
