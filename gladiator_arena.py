@@ -34,12 +34,12 @@ def fight_explain():
 def weapon_pick():
     lines_start("\nHere are the weapons you can choose from:")
     for weapon in info.weapon_ls:
-        print(f"{weapon.name} -- value: {weapon.value} speed: {weapon.speed} damage: {weapon.damage}")
+        print(f"{weapon.name} -- speed: {weapon.speed} damage: {weapon.damage} value: {weapon.value}")
     lines_end("")
     print(f"\nOut of these {len(info.weapon_ls)} options, you can only pick one.\n")
     for weapon in info.weapon_ls:
         weapon_select = input(f"Would you like to use a {weapon.name}?\n> ")
-        if weapon_select.lower() == 'yes':
+        if weapon_select.lower() == 'yes' or weapon_select.lower() == 'y':
             info.player.weapon = weapon
             lines_start(f"\nYou've chosen to fight with a {weapon.name}.")
             break
@@ -52,19 +52,78 @@ def armor_pick():
     print(f"\nOut of these {len(info.armor_ls)} options, you can only pick one.\n")
     for armor in info.armor_ls:
         armor_select = input(f"Would you like to use {armor.name}?\n> ")
-        if armor_select.lower() == 'yes':
+        if armor_select.lower() == 'yes' or armor_select.lower() == 'y':
             info.player.armor = armor
             lines_start(f"\nYou've chosen to fight with {armor.name}.")
             break
 
+def visit_shop():
+    print(f"Before entering the arena, you pass by a shop called {info.shopkeeper.name}'s Gladiator Goods.\n")
+    a = input("Would you like to enter the shop?\n> ")
+    if a.lower() != "yes":
+        return
+    else:
+        shop_inside()
+
+def shop_inside():
+    info.shopkeeper.ls_inventory_prices()
+    info.player.ls_inventory()
+    b = input("Would you like to buy, sell, or leave?\n> ")
+    if b.lower() == "buy" or b.lower() == "b":
+        seller = info.shopkeeper
+        buyer = info.player
+        transaction_verb = "buy"
+    elif b.lower() == "sell" or b.lower() == "s":
+        seller = info.player
+        buyer = info.shopkeeper
+        transaction_verb = "sell"
+    else:
+        return
+    #: Is the selected item valid?
+    item_find = len(seller.pouch) - 1
+    p = input(f"What would you like to {transaction_verb}?\n> ")
+    item_picked = p.lower()
+    for n in seller.pouch:
+        if seller.pouch[item_find].name == item_picked:
+            break
+        elif seller.pouch[item_find].name[0: -1] == item_picked:
+            break
+        elif seller.gold.name == item_picked:
+            print(f"You can't {transaction_verb} {seller.gold.name}!")
+            continue_shopping()
+        elif item_find == 0:
+            print(f"It looks like {seller.name} doesn't have that item right now.")
+            continue_shopping()
+        item_find -= 1
+    #: Does seller have the item?
+    if seller.pouch[item_find].amount == 0:
+        explain(f"{seller.name} doesn't have enough {seller.pouch[item_find].name} right now.")
+        continue_shopping()
+    elif buyer.gold.amount < seller.pouch[item_find].value:
+        explain(f"{buyer.name} doesn't have enough gold right now.")
+        continue_shopping()
+    else:
+        buyer.gold.amount -= seller.pouch[item_find].value
+        buyer.pouch[item_find].amount += 1
+        seller.pouch[item_find].amount -= 1
+        explain(f"{buyer.name} bought 1 {buyer.pouch[item_find].name} from {seller.name}.\n")
+        continue_shopping()
+
+def continue_shopping():
+    c = input("Would you like to continue shopping?\n> ")
+    if c.lower() == "yes":
+        shop_inside()
+    else:
+        return
+
 def arena_enter():
-    explain("\nYou're ready to fight! There are several other contestants.")
+    explain(f"\n{info.player.name} enters the arena to roaring applause.\n\nAs {info.player.name} looks around, {info.player.name} notices that there are several other contestants.")
     lines_end("\n")
     for count,contestant in enumerate(info.contestants_ls,1):
         print(f"Contestant {count} is: {contestant.name}. Their stats are: {contestant.skill} skill, {contestant.speed} speed, {contestant.strength} strength.")
     lines_end("")
     def opponent_input_check():
-        opponent_input = input("\nPlease type the number of the contestant you would like to duel.\n> ")
+        opponent_input = input(f"\nWhich contestant should {info.player.name} duel?\n> ")
         if opponent_input.isnumeric() != True or int(opponent_input) > count or int(opponent_input) <= 0:
             print("It looks like you haven't typed in a valid number. Please try again.\n")
             opponent_input_check()
@@ -89,18 +148,30 @@ def combat_stats():
 
 
 def attack_init():
-    if info.player.getSpeed() > info.opponent.getSpeed():
-        explain("\n\nYou are faster than your opponent. You attack first.\n")
-    elif info.player.getSpeed() < info.opponent.getSpeed():
-        explain("\n\nYour opponent is faster than you. They attack first.\n")
-        info.turnCount += 1
-    else:
+    def attack_priority(scenario):
+        if scenario == True:
+            explain(f"\n{faster} is faster than {slower}, so {faster} attacks first.\n")
+        else:
+            print(f"\n\nNeither {info.player.name} or {info.opponent.name} is faster.")
+
+    if round(info.player.getSpeed()) == round(info.opponent.getSpeed()):
         chance = random.randrange(0, 2)
         if chance == 0:
-            explain("\n\nNeither you nor your opponent is faster, but your opponent gains the upper hand.\n")
+            attack_priority(False)
+            explain(f"However, {info.opponent.name} gains the upper hand and attacks.")
             info.turnCount += 1
         else:
-            explain("\n\nNeither you nor your opponent is faster, but you gain the upper hand.\n")
+            attack_priority(False)
+            explain(f"However, {info.player.name} gains the upper hand and attacks.")
+    else:
+        if info.player.getSpeed() > info.opponent.getSpeed():
+            faster = info.player.name
+            slower = info.opponent.name
+        elif info.player.getSpeed() < info.opponent.getSpeed():
+            faster = info.opponent.name
+            slower = info.player.name
+            info.turnCount += 1
+        attack_priority(True)
     attack()
 
 
@@ -128,6 +199,7 @@ def attack():
         win_condition()
         if prompt_inventory() == True:
             if use_inventory() == True:
+                info.player.consume_item()
                 trigger_item_effect()
 
     else:
@@ -136,15 +208,17 @@ def attack():
     attack()
 
 def prompt_inventory():
-    a = input("Would you like to view your inventory?\n> ")
+    a = input(f"Would {info.player.name} like to view their inventory?\n> ")
     if a.lower() != "yes":
+        print("")
         return
-    elif a.lower() == "yes" or a.lower() == "y":
+    else:
         info.player.ls_inventory()
-        b = input("Would you like to use an item?\n> ")
+        b = input(f"Would {info.player.name} like to use an item?\n> ")
         if b.lower() != "yes":
+            print("")
             return False
-        elif b.lower() == "yes" or b.lower() == "y":
+        else:
             return True
 
 def use_inventory():
@@ -154,7 +228,6 @@ def use_inventory():
         return explain("")
     if info.player.item_inventory_check() == False:
         return explain("")
-    info.player.consume_item()
     return True
 
 def trigger_item_effect():
@@ -194,7 +267,7 @@ def win_condition():
     elif info.player.health <= 0:
         print("\n\n\n\t\t\t\t\tYou lose.\n\n\n\n\n")
         r = input("Would you like to play again?\n> ")
-        if r.lower() == "yes" or r.lower() == "y":
+        if r.lower() == "yes":
             info.player.health = info.start_health
             info.opponent.health = info.start_health
             lines_start("")
@@ -208,20 +281,19 @@ def win_condition():
             quit()
 
 def play_again():
-    r = input("\nWould you like to play again? Your combat stats will reset, but your health will remain the same.\n> ")
-    if r.lower() == "yes" or r.lower() == "y":
-        info.player.strength = info.strength_reset
-        info.player.defense = info.defense_reset
-        info.player.speed = info.speed_reset
-        arena_enter()
-        combat_stats()
-        attack_init()
-    else:
+    r = input("\nWould you like to play again?\n\nYour combat stats will reset, but your health will remain the same.\n> ")
+    if r.lower() != "yes":
         q = input("Are you sure? Type 'q' to quit.\n> ")
         if q.lower() == "q":
             quit()
         else:
             play_again()
+    info.player.strength = info.strength_reset
+    info.player.defense = info.defense_reset
+    info.player.speed = info.speed_reset
+    arena_enter()
+    combat_stats()
+    attack_init()
 
 
 
@@ -230,6 +302,7 @@ explanation()
 classes.get_player_name()
 weapon_pick()
 armor_pick()
+visit_shop()
 arena_enter()
 combat_stats()
 attack_init()

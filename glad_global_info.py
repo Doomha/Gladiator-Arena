@@ -2,6 +2,7 @@ import random
 from sys import exit
 import glad_classes as classes
 import glad_items as items
+import glad_inventory as inventory
 
 weapon_ls = [items.Sword(), items.Bow(), items.Spear(), items.Rock()]
 armor_ls = [items.Chainmail(), items.Platemail(), items.Tunic()]
@@ -16,4 +17,5 @@ health_reset = None #: This gets used to reset player health for new fight
 strength_reset = None
 defense_reset = None
 speed_reset = None
-player = classes.Contestant(pl_name, True, 15, 15, 15, 10, 2, 3, 4, 3)
+player = classes.Contestant(pl_name, True, 6, 6, 6, 10, 0, 0, 0, 0)
+shopkeeper = inventory.Person("Ginger", False, 15, 3, 4, 5, 6)

@@ -19,8 +19,22 @@ class Person():
         print(f"\n{self.name}'s inventory:")
         print("-" * 10)
         for items in self.pouch:
-            if self.pouch[a].amount != 0:
+            if self.pouch[a].name == "gold":
                 print(f"{self.pouch[a].name}: {self.pouch[a].amount}")
+            elif self.pouch[a].amount != 0:
+                print(f"{self.pouch[a].name}: {self.pouch[a].amount}")
+            a += 1
+        print("-" * 10, "\n")
+
+    def ls_inventory_prices(self):
+        a = 0
+        print(f"\n{self.name}'s inventory:")
+        print("-" * 10)
+        for items in self.pouch:
+            if self.pouch[a].name == "gold":
+                print(f"{self.pouch[a].name}: {self.pouch[a].amount}")
+            elif self.pouch[a].amount != 0:
+                print(f"{self.pouch[a].name}: {self.pouch[a].amount} - price: {self.pouch[a].value}")
             a += 1
         print("-" * 10, "\n")
 
@@ -31,10 +45,6 @@ class Person():
         p = input("What would you like to consume?\n> ")
         item_picked = p.lower()
         for n in self.pouch:
-            print(self.pouch[item_locator].name)
-            print(item_picked)
-            print(self.pouch[item_locator].name[0: -1])
-            print(item_locator)
             if self.pouch[item_locator].name == item_picked:
                 break
             elif self.pouch[item_locator].name[0: -1] == item_picked:
