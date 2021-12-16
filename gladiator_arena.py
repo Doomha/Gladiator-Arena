@@ -175,7 +175,7 @@ def arena_enter():
     opponent_input_check()
     info.opponent = info.contestants_ls[info.valid_opponent_input - 1]
     oppo.get_weapon()
-    info.opponent.armor = random.choice(info.armor_ls)
+    oppo.get_armor()
     explain(f"\n{info.opponent.name} will be fighting you with a {info.opponent.weapon.name}, which is a {info.opponent.weapon.w_type} weapon. They are also equipped with {info.opponent.armor.name}. Good luck!\n")
 
 def combat_stats():
