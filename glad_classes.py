@@ -7,7 +7,7 @@ import glad_inventory as inventory
 
 class Contestant(inventory.Person):
     def __init__(self, name, pl_controlled, skill, speed, strength):
-        super().__init__(name, pl_controlled, 10, 0, 0, 0, 0)
+        super().__init__(name, pl_controlled, 15, 0, 0, 0, 0)
         self.skill = skill
         self.speed = speed
         self.strength = strength

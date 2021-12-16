@@ -49,39 +49,46 @@ def choose_difficulty():
             count += 1
 
 def fight_explain():
-    explain("\tWelcome to the fighting pits! Your goal is to reduce your opponents' health to 0. Contestants, including yourself, start with 10 health points, so don't worry if your opponent hits you every so often. This is a game of survival, not (necessarily) who hits first!")
+    explain("\tWelcome to the fighting pits! Your character will face a series of opponents in a fight to the death. Your goal is to reduce each of your opponent's health to 0. Contestants, including yourself, start with 10 health points.")
     explain("\n\tThere are a couple of other stats that will be important to remember...")
     explain("\n\nSkill: The chance one of your attacks hits your opponent. Also helps you dodge your opponent's attacks.")
     explain("\nSpeed: Decides who gets to attack first. Also helps you dodge your opponent's attacks.")
-    explain("\nStrength: How hard one of your attacks hits, once it connects with your opponent.")
-    explain("\n\n\tThat being said, your equipment has an impact on your stats as well. Choose a cumbersome weapon, and your Speed will go down. Attack with something small, and your Strength doesn't do much good.\n\n\t\t\t\t\tGood luck!\n\n")
+    explain("\nStrength: A key component in calculating the amount of damage your attacks can deal, once they connect with your opponent.")
+    explain("\n\n\tThat being said, your equipment has an impact on your stats as well. Choose a cumbersome weapon, and your Speed will go down. Attack with something small, and your Strength doesn't do much good.")
+    explain("\n\n\tYour character will also be able to buy, sell, and consume items that can boost your stats. Make sure to pace yourself though--some of your opponents will be quite tough!\n\n\t\t\t\t\tGood luck!\n\n")
     explain("\n\n\n\n\n")
 
 def weapon_pick():
-    lines_start(f"\nHere are the weapons {info.player.name} can choose from:")
+    lines_start(f"\n{info.player.name} has {info.player.gold.amount} gold. Here are the weapons {info.player.name} can choose from:")
     for weapon in info.weapon_ls:
-        print(f"{weapon.name} -- speed: {weapon.speed} damage: {weapon.damage} value: {weapon.value}")
+        if weapon.value <= info.player.gold.amount:
+            print(f"{weapon.name} -- speed: {weapon.speed} damage: {weapon.damage} cost: {weapon.value}")
     lines_end("")
-    print(f"\nOut of these {len(info.weapon_ls)} options, {info.player.name} can only pick one.\n")
+    print(f"\nOut of these {len(info.weapon_ls)} options, {info.player.name} can only pick one. You'll have to pay for whatever weapon you choose.\n")
     for weapon in info.weapon_ls:
-        weapon_select = input(f"Would {info.player.name} like to use a {weapon.name}?\n> ")
-        if weapon_select.lower() == 'yes' or weapon_select.lower() == 'y':
-            info.player.weapon = weapon
-            lines_start(f"\n{info.player.name} has chosen to fight with a {weapon.name}.")
-            break
+        if weapon.value <= info.player.gold.amount:
+            weapon_select = input(f"Would {info.player.name} like to use a {weapon.name}?\n> ")
+            if weapon_select.lower() == 'yes' or weapon_select.lower() == 'y':
+                info.player.weapon = weapon
+                info.player.gold.amount -= weapon.value
+                lines_start(f"\n{info.player.name} has chosen to fight with a {weapon.name}. {info.player.name} has {info.player.gold.amount} gold left.")
+                break
 
 def armor_pick():
-    lines_start(f"\nHere are the armor options {info.player.name} can choose from:")
+    lines_start(f"\n{info.player.name} has {info.player.gold.amount} gold. Here are the armor options {info.player.name} can choose from:")
     for armor in info.armor_ls:
-        print(f"{armor.name} -- value: {armor.value} defense: {armor.defense} weight: {armor.weight}")
+        if armor.value <= info.player.gold.amount:
+            print(f"{armor.name} -- value: {armor.value} defense: {armor.defense} weight: {armor.weight} cost: {armor.value}")
     lines_end("")
-    print(f"\nOut of these {len(info.armor_ls)} options, {info.player.name} can only pick one.\n")
+    print(f"\nOut of these {len(info.armor_ls)} options, {info.player.name} can only pick one.You'll have to pay for whatever armor you choose.\n")
     for armor in info.armor_ls:
-        armor_select = input(f"Would {info.player.name} like to use {armor.name}?\n> ")
-        if armor_select.lower() == 'yes' or armor_select.lower() == 'y':
-            info.player.armor = armor
-            lines_start(f"\n{info.player.name} has chosen to fight with {armor.name}.")
-            break
+        if armor.value <= info.player.gold.amount:
+            armor_select = input(f"Would {info.player.name} like to use {armor.name}?\n> ")
+            if armor_select.lower() == 'yes' or armor_select.lower() == 'y':
+                info.player.armor = armor
+                info.player.gold.amount -= armor.value
+                lines_start(f"\n{info.player.name} has chosen to fight with {armor.name}. {info.player.name} has {info.player.gold.amount} gold left.")
+                break
 
 def visit_shop():
     print(f"Before entering the arena, {info.player.name} passes by a shop called {info.shopkeeper.name}'s Gladiator Goods.\n")
