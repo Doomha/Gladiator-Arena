@@ -214,6 +214,7 @@ def attack_init():
             slower = info.player.name
             info.turnCount += 1
         attack_priority(True)
+        inventory_loop()
     attack()
 
 
