@@ -1,8 +1,7 @@
 class Item():
-    def __init__(self, name, value, limit, amount, health_incr, strength_incr, defense_incr, speed_incr):
+    def __init__(self, name, value, amount, health_incr, strength_incr, defense_incr, speed_incr):
         self.name = name
         self.value = value
-        self.limit = limit
         self.amount = amount
         self.health_incr = health_incr
         self.strength_incr = strength_incr
@@ -12,28 +11,28 @@ class Item():
 #:Non-weapon items
 class Gold(Item):
     def __init__(self, amount):
-        super().__init__("gold", 1, 100, amount, 0, 0, 0, 0)
+        super().__init__("gold", 1, amount, 0, 0, 0, 0)
 
 class StrengthPotion(Item):
     def __init__(self, amount):
-        super().__init__("strength potions", 10, 5, amount, 0, 3, 0, 0)
+        super().__init__("strength potions", 10, amount, 0, 3, 0, 0)
 
 class DefensePotion(Item):
     def __init__(self, amount):
-        super().__init__("defense potions", 10, 5, amount, 0, 0, 6, 0)
+        super().__init__("defense potions", 10, amount, 0, 0, 6, 0)
 
 class SpeedPotion(Item):
     def __init__(self, amount):
-        super().__init__("speed potions", 10, 5, amount, 0, 0, 0, 5)
+        super().__init__("speed potions", 10, amount, 0, 0, 0, 5)
 
 class Sweetcakes(Item):
     def __init__(self, amount):
-        super().__init__("sweetcakes", 5, 5, amount, 2, 0, 0, 0)
+        super().__init__("sweetcakes", 5, amount, 2, 0, 0, 0)
 
 #: Weapons
 class Weapon(Item):
     def __init__(self, name, value, w_type, speed, damage):
-        super().__init__(name, value, 1, 1, 0, 0, 0, 0)
+        super().__init__(name, value, 1, 0, 0, 0, 0)
         self.w_type = w_type
         self.speed = speed
         self.damage = damage
@@ -72,7 +71,7 @@ class Fist(Melee_weapon):
 #: Armor items
 class Armor(Item):
     def __init__(self, name, value, defense, weight):
-        super().__init__(name, value, 1, 1, 0, 0, 0, 0)
+        super().__init__(name, value, 1, 0, 0, 0, 0)
         self.defense = defense
         self.weight = weight
 

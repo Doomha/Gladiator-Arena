@@ -120,3 +120,48 @@ def get_armor():
     a.gen_armor_containers()
     a.generate_armor(info.game_mode)
     a.set_opponent_armor()
+
+def generate_stats(mode):
+    count = 0
+    if mode == "Normal":
+        stats_range = [3, 9]
+        gold_range = [0, 11]
+        potions_range = [0, 2]
+        sweetcakes_range = [0, 3]
+
+    elif mode == "Easy":
+        stats_range = [1, 6]
+        gold_range = [0, 11]
+        potions_range = [0, 2]
+        sweetcakes_range = [0, 4]
+
+    elif mode == "Hard":
+        stats_range = [5, 11]
+        gold_range = [7, 15]
+        potions_range = [0, 1]
+        sweetcakes_range = [0, 2]
+
+    for w in info.contestants_ls:
+        set = [None, None, None, None, None, None, None, None]
+        q = 0
+        for x in list(range(3)):
+            set[q] = random.randrange(stats_range[0],stats_range[1])
+            q += 1
+        info.contestants_ls[count].skill = set[0]
+        info.contestants_ls[count].speed = set[1]
+        info.contestants_ls[count].strength = set[2]
+        for x in list(range(1)):
+            set[q] = random.randrange(gold_range[0],gold_range[1])
+            q += 1
+        info.contestants_ls[count].gold = set[3]
+        for x in list(range(3)):
+            set[q] = random.randrange(potions_range[0],potions_range[1])
+            q += 1
+        info.contestants_ls[count].strength_potion = set[4]
+        info.contestants_ls[count].defense_potion = set[5]
+        info.contestants_ls[count].speed_potion = set[6]
+        for x in list(range(1)):
+            set[q] = random.randrange(sweetcakes_range[0],sweetcakes_range[1])
+            q += 1
+        info.contestants_ls[count].sweetcakes = set[7]
+        count += 1

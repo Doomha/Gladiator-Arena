@@ -176,7 +176,7 @@ def arena_enter():
     info.opponent = info.contestants_ls[info.valid_opponent_input - 1]
     oppo.get_weapon()
     oppo.get_armor()
-    explain(f"\n{info.opponent.name} will be fighting you with a {info.opponent.weapon.name}, which is a {info.opponent.weapon.w_type} weapon. They are also equipped with {info.opponent.armor.name}. Good luck!\n")
+    explain(f"\n{info.opponent.name} will be fighting you with a {info.opponent.weapon.name}, which is a {info.opponent.weapon.w_type} weapon. {info.opponent.name} is also equipped with {info.opponent.armor.name}. Good luck!\n")
 
 def combat_stats():
     lines_end("\n")
@@ -322,6 +322,7 @@ def win_condition():
             weapon_pick()
             armor_pick()
             visit_shop()
+            oppo.generate_stats(info.game_mode)
             arena_enter()
             combat_stats()
             attack_init()
@@ -329,7 +330,7 @@ def win_condition():
             quit()
 
 def play_again():
-    r = input(f"\nWould {info.player.name} like to continue?\n\n{info.player.name}'s combat stats will reset, but {info.player.name}'s health will not.\n> ")
+    r = input(f"\nWould {info.player.name} like to continue?\n\n{info.player.name}'s combat stats will reset, but {info.player.name}'s health ({info.player.health}) will not.\n> ")
     if r.lower() != "yes":
         q = input("Are you sure? Type 'q' to quit.\n> ")
         if q.lower() == "q":
@@ -375,6 +376,7 @@ classes.get_player_name()
 weapon_pick()
 armor_pick()
 visit_shop()
+oppo.generate_stats(info.game_mode)
 arena_enter()
 combat_stats()
 attack_init()
