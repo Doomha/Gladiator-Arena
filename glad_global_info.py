@@ -4,9 +4,9 @@ import glad_classes as classes
 import glad_items as items
 import glad_inventory as inventory
 
-weapon_ls = [items.Sword(), items.Bow(), items.Spear(), items.Rock(), items.Fist()]
-armor_ls = [items.Chainmail(), items.Platemail(), items.Tunic()]
-contestants_ls = [classes.Contestant("James", False, 4, 8, 7), classes.Contestant("Jack", False, 6, 6, 6), classes.Contestant("Jaxon", False, 8, 7, 5)]
+weapon_ls = [items.Sword(), items.Bow(), items.Spear(), items.Warhammer(), items.Fist()]
+armor_ls = [items.Chainmail(), items.Platemail(), items.StuddedLeather(), items.Tunic()]
+contestants_ls = [classes.Contestant("James", False, None, None, None), classes.Contestant("Jack", False, None, None, None), classes.Contestant("Jaxon", False, None, None, None)]
 game_mode_ls = ["Easy", "Normal", "Hard"]
 game_mode = None
 attack_evade_mod = 0.1

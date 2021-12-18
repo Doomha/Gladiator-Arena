@@ -6,11 +6,10 @@ import glad_items as items
 import glad_inventory as inventory
 
 class Game():
-    def __init__(self, num_opponents, game_difficulty, item_quality, stats_quality):
+    def __init__(self, mode_name, num_opponents):
+        self.mode_name = mode_name
         self.num_opponents = num_opponents
-        self.game_difficulty = game_difficulty
-        self.item_quality = item_quality
-        self.stats_quality = stats_quality
+
 
 
     #: Creates a dictionary from weapon_stats & weapon_names lists.
@@ -106,20 +105,32 @@ class Game():
             elif info.armor_ls[m].name == armor_str:
                 info.opponent.armor = info.armor_ls[m]
 
+    def set_opponents(self, mode):
+    #:    if mode == "Normal":
 
-test_game = Game(3, 0, 0, 0)
+    #:    elif mode == "Easy":
+
+    #:    elif mode == "Hard":
+
+
+class EasyMode(Game):
+    def __init__(self, mode_name, num_opponents):
+        super().__init__("Easy", 2)
+
+main_game = Game(3, 0, 0, 0)
 
 def get_weapon():
-    a = test_game
+    a = main_game
     a.gen_weapon_containers()
     a.generate_weapon(info.game_mode)
     a.set_opponent_weapon()
 
 def get_armor():
-    a = test_game
+    a = main_game
     a.gen_armor_containers()
     a.generate_armor(info.game_mode)
     a.set_opponent_armor()
+
 
 def generate_stats(mode):
     count = 0
@@ -128,18 +139,19 @@ def generate_stats(mode):
         gold_range = [0, 11]
         potions_range = [0, 2]
         sweetcakes_range = [0, 3]
+        num_
 
     elif mode == "Easy":
         stats_range = [1, 6]
         gold_range = [0, 11]
-        potions_range = [0, 2]
+        potions_range = [0, 3]
         sweetcakes_range = [0, 4]
 
     elif mode == "Hard":
         stats_range = [5, 11]
-        gold_range = [7, 15]
-        potions_range = [0, 1]
-        sweetcakes_range = [0, 2]
+        gold_range = [7, 16]
+        potions_range = [0, 2]
+        sweetcakes_range = [0, 3]
 
     for w in info.contestants_ls:
         set = [None, None, None, None, None, None, None, None]
