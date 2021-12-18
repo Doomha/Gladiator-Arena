@@ -26,21 +26,21 @@ def explanation():
 def show_difficulty():
     diff_input = input("Would you like to choose the level of difficulty?\n> ")
     if diff_input.lower() != "yes":
-        info.game_mode = info.game_mode_ls[1]
+        info.game_mode = oppo.NormalMode()
     elif diff_input.lower() == "yes":
         print("Here are the levels of difficulty:\n")
         count = 0
         for a in enumerate(info.game_mode_ls):
-            print(info.game_mode_ls[count])
+            print(info.game_mode_ls[count].mode_name)
             count += 1
         choose_difficulty()
-    explain(f"\nYou're playing on {info.game_mode} mode.")
+    explain(f"\nYou're playing on {info.game_mode.mode_name} mode.")
 
 def choose_difficulty():
     chosen_diff = input(f"\nType in the level of difficulty you would like to play.\n> ")
     count = 0
     for b in enumerate(info.game_mode_ls):
-        if chosen_diff.lower() == info.game_mode_ls[count].lower():
+        if chosen_diff.lower() == info.game_mode_ls[count].mode_name.lower():
             info.game_mode = info.game_mode_ls[count]
         elif count == len(info.game_mode_ls):
             explain("It looks like you haven't typed in a valid game mode. Try again.")
@@ -57,6 +57,10 @@ def fight_explain():
     explain("\n\n\tThat being said, your equipment has an impact on your stats as well. Choose a cumbersome weapon, and your Speed will go down. Attack with something small, and your Strength doesn't do much good.")
     explain("\n\n\tYour character will also be able to buy, sell, and consume items that can boost your stats. Make sure to pace yourself though--some of your opponents will be quite tough!\n\n\t\t\t\t\tGood luck!\n\n")
     explain("\n\n\n\n\n")
+
+def pl_stats():
+    info.game_mode.gen_pl_stats()
+    explain(f"\nHere is {info.player.name}'s skill: {info.player.skill}, speed: {info.player.speed}, strength: {info.player.strength}.\n")
 
 def weapon_pick():
     lines_start(f"\n{info.player.name} has {info.player.gold.amount} gold. Here are the weapons {info.player.name} can choose from:")
@@ -181,8 +185,17 @@ def arena_enter():
 
     opponent_input_check()
     info.opponent = info.contestants_ls[info.valid_opponent_input - 1]
-    oppo.get_weapon()
-    oppo.get_armor()
+
+    def set_opponent_equipment():
+        info.game_mode.gen_weapon_containers()
+        info.game_mode.gen_armor_containers()
+        oppo.find_mode_odds(info.game_mode)
+        info.game_mode.gen_weapon()
+        info.game_mode.gen_armor()
+        info.game_mode.set_opponent_weapon()
+        info.game_mode.set_opponent_armor()
+    set_opponent_equipment()
+
     explain(f"\n{info.opponent.name} will be fighting you with a {info.opponent.weapon.name}, which is a {info.opponent.weapon.w_type} weapon. {info.opponent.name} is also equipped with {info.opponent.armor.name}. Good luck!\n")
 
 def combat_stats():
@@ -324,16 +337,7 @@ def win_condition():
         print(f"\n\n\n\t\t\t\t\t{info.player.name} lost.\n\n\n\n\n")
         r = input("Would you like to play again?\n> ")
         if r.lower() == "yes":
-            reset_player_stats()
-            lines_start("")
-            classes.get_player_name()
-            weapon_pick()
-            armor_pick()
-            visit_shop()
-            oppo.generate_stats(info.game_mode)
-            arena_enter()
-            combat_stats()
-            attack_init()
+            main_script()
         else:
             quit()
 
@@ -377,14 +381,18 @@ def opponent_drop():
             opponent_drop()
 
 
+def main_script():
+    explanation()
+    show_difficulty()
+    classes.get_player_name()
+    info.game_mode.gen_opponents()
+    pl_stats()
+    weapon_pick()
+    armor_pick()
+    visit_shop()
+    info.game_mode.generate_stats()
+    arena_enter()
+    combat_stats()
+    attack_init()
 
-explanation()
-show_difficulty()
-classes.get_player_name()
-weapon_pick()
-armor_pick()
-visit_shop()
-oppo.generate_stats(info.game_mode)
-arena_enter()
-combat_stats()
-attack_init()
+main_script()
