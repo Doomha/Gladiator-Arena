@@ -11,6 +11,7 @@ contestants_ls = [classes.Contestant("James", False, None, None, None), classes.
 game_mode_ls = [oppo.EasyMode(), oppo.NormalMode(), oppo.HardMode()]
 game_mode = None
 attack_evade_mod = 0.1
+speed_priority_mod = 40
 hit_chance = 10
 turnCount = 0
 valid_opponent_input = 0

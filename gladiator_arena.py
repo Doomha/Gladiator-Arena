@@ -68,7 +68,7 @@ def weapon_pick():
         if weapon.value <= info.player.gold.amount:
             print(f"{weapon.name} -- speed: {weapon.speed} damage: {weapon.damage} cost: {weapon.value}")
     lines_end("")
-    print(f"\nOut of these {len(info.weapon_ls)} options, {info.player.name} can only pick one. You'll have to pay for whatever weapon you choose.\n")
+    print(f"\nOut of these {len(info.weapon_ls)} options, {info.player.name} can only pick one. {info.player.name} will have to pay to rent whichever weapon they choose.\n")
     for weapon in info.weapon_ls:
         if weapon.value <= info.player.gold.amount:
             weapon_select = input(f"Would {info.player.name} like to use a {weapon.name}?\n> ")
@@ -82,9 +82,9 @@ def armor_pick():
     lines_start(f"\n{info.player.name} has {info.player.gold.amount} gold. Here are the armor options {info.player.name} can choose from:")
     for armor in info.armor_ls:
         if armor.value <= info.player.gold.amount:
-            print(f"{armor.name} -- value: {armor.value} defense: {armor.defense} weight: {armor.weight} cost: {armor.value}")
+            print(f"{armor.name} -- defense: {armor.defense} weight: {armor.weight} cost: {armor.value}")
     lines_end("")
-    print(f"\nOut of these {len(info.armor_ls)} options, {info.player.name} can only pick one.You'll have to pay for whatever armor you choose.\n")
+    print(f"\nOut of these {len(info.armor_ls)} options, {info.player.name} can only pick one. {info.player.name} will have to pay to rent whichever armor they choose.\n")
     for armor in info.armor_ls:
         if armor.value <= info.player.gold.amount:
             armor_select = input(f"Would {info.player.name} like to use {armor.name}?\n> ")
@@ -196,7 +196,7 @@ def arena_enter():
         info.game_mode.set_opponent_armor()
     set_opponent_equipment()
 
-    explain(f"\n{info.opponent.name} will be fighting you with a {info.opponent.weapon.name}, which is a {info.opponent.weapon.w_type} weapon. {info.opponent.name} is also equipped with {info.opponent.armor.name}. Good luck!\n")
+    explain(f"\n{info.opponent.name} will be fighting {info.player.name} with a {info.opponent.weapon.name}, which is a {info.opponent.weapon.w_type} weapon. {info.opponent.name} is also equipped with {info.opponent.armor.name}. Good luck!\n")
 
 def combat_stats():
     lines_end("\n")
@@ -210,29 +210,32 @@ def combat_stats():
 
 
 def attack_init():
+    true_speed_pl = round(random.randrange(((info.player.getSpeed()) * 2), info.speed_priority_mod))
+    true_speed_opp = round(random.randrange(((info.opponent.getSpeed()) * 2), info.speed_priority_mod))
+
     def attack_priority(scenario):
         if scenario == True:
-            explain(f"\n{faster} is faster than {slower}, so {faster} attacks first.\n")
+            print(f"\n{faster} gains the upper hand and attacks {slower}.\n")
         else:
             print(f"\n\nNeither {info.player.name} or {info.opponent.name} is faster.")
 
-    if round(info.player.getSpeed()) == round(info.opponent.getSpeed()):
+    if true_speed_pl == true_speed_opp:
         chance = random.randrange(0, 2)
         if chance == 0:
             attack_priority(False)
-            explain(f"However, {info.opponent.name} gains the upper hand and attacks.")
-            info.turnCount += 1
+            print(f"However, {info.opponent.name} gains the upper hand and attacks.\n")
         else:
             attack_priority(False)
-            explain(f"However, {info.player.name} gains the upper hand and attacks.")
+            print(f"However, {info.player.name} gains the upper hand and attacks.\n")
     else:
-        if info.player.getSpeed() > info.opponent.getSpeed():
+        if true_speed_pl > true_speed_opp:
             faster = info.player.name
             slower = info.opponent.name
-        elif info.player.getSpeed() < info.opponent.getSpeed():
+            info.turnCount = info.player
+        elif true_speed_pl < true_speed_opp:
             faster = info.opponent.name
             slower = info.player.name
-            info.turnCount += 1
+            info.turnCount = info.opponent
         attack_priority(True)
         inventory_loop()
     attack()
@@ -240,7 +243,7 @@ def attack_init():
 
 def attack():
     chance = random.randrange(0, info.hit_chance)
-    if info.turnCount % 2 == 0:
+    if info.turnCount == info.player:
         source = info.player
         target = info.opponent
     else:
@@ -254,15 +257,14 @@ def attack():
             print(f"{source.name} did {damage_done} damage. {target.name}'s {target.armor.name} blocked {round(target.defense)} damage.")
             target.takeDamage(damage_done)
         else:
-            print(f"1 damage was done.")
+            print(f"{source.name} did 1 damage to {target.name}.")
             target.takeDamage(1)
         print(f"{target.name} has {target.health} health left.\n")
         win_condition()
         inventory_loop()
     else:
-        explain(f"{source.name} attack misses.\n")
-    info.turnCount += 1
-    attack()
+        explain(f"{source.name}'s attack misses.\n")
+    attack_init()
 
 def inventory_loop():
     if prompt_inventory() == True:
