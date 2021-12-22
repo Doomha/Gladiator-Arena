@@ -63,36 +63,60 @@ def pl_stats():
     explain(f"\nHere is {info.player.name}'s skill: {info.player.skill}, speed: {info.player.speed}, strength: {info.player.strength}.\n")
 
 def weapon_pick():
-    lines_start(f"\n{info.player.name} has {info.player.gold.amount} gold. Here are the weapons {info.player.name} can choose from:")
-    for weapon in info.weapon_ls:
-        if weapon.value <= info.player.gold.amount:
+    def show_weapons():
+        lines_start(f"\n{info.player.name} has {info.player.gold.amount} gold. Here are the weapon options {info.player.name} can choose from:")
+        for weapon in info.weapon_ls:
             print(f"{weapon.name} -- speed: {weapon.speed} damage: {weapon.damage} cost: {weapon.value}")
-    lines_end("")
-    print(f"\nOut of these {len(info.weapon_ls)} options, {info.player.name} can only pick one. {info.player.name} will have to pay to rent whichever weapon they choose.\n")
-    for weapon in info.weapon_ls:
-        if weapon.value <= info.player.gold.amount:
-            weapon_select = input(f"Would {info.player.name} like to use a {weapon.name}?\n> ")
-            if weapon_select.lower() == 'yes' or weapon_select.lower() == 'y':
-                info.player.weapon = weapon
-                info.player.gold.amount -= weapon.value
-                lines_start(f"\n{info.player.name} has chosen to fight with a {weapon.name}. {info.player.name} has {info.player.gold.amount} gold left.")
+    def weapon_loop():
+        count = 0
+        weapon_select = input(f"\nWhich weapon would {info.player.name} like to rent?\n> ")
+        for weapon in info.weapon_ls:
+            if weapon.name.lower() != weapon_select.lower():
+                count += 1
+            elif weapon.name.lower() == weapon_select.lower():
+                if weapon.value <= info.player.gold.amount:
+                    info.player.weapon = weapon
+                    info.player.gold.amount -= weapon.value
+                    lines_start(f"\n{info.player.name} has chosen to fight with a {weapon.name}. {info.player.name} has {info.player.gold.amount} gold left.")
+                    break
+                else:
+                    explain(f"{info.player.name} needs {weapon.value - info.player.gold.amount} more gold to be able to afford that weapon. Pick a different one.\n")
+                    weapon_loop()
+                    break
+            if count == len(info.weapon_ls):
+                explain("It looks like you haven't typed in a valid weapon option. Try again.")
+                weapon_loop()
                 break
+    show_weapons()
+    weapon_loop()
 
 def armor_pick():
-    lines_start(f"\n{info.player.name} has {info.player.gold.amount} gold. Here are the armor options {info.player.name} can choose from:")
-    for armor in info.armor_ls:
-        if armor.value <= info.player.gold.amount:
+    def show_armor():
+        lines_start(f"\n{info.player.name} has {info.player.gold.amount} gold. Here are the armor options {info.player.name} can choose from:")
+        for armor in info.armor_ls:
             print(f"{armor.name} -- defense: {armor.defense} weight: {armor.weight} cost: {armor.value}")
-    lines_end("")
-    print(f"\nOut of these {len(info.armor_ls)} options, {info.player.name} can only pick one. {info.player.name} will have to pay to rent whichever armor they choose.\n")
-    for armor in info.armor_ls:
-        if armor.value <= info.player.gold.amount:
-            armor_select = input(f"Would {info.player.name} like to use {armor.name}?\n> ")
-            if armor_select.lower() == 'yes' or armor_select.lower() == 'y':
-                info.player.armor = armor
-                info.player.gold.amount -= armor.value
-                lines_start(f"\n{info.player.name} has chosen to fight with {armor.name}. {info.player.name} has {info.player.gold.amount} gold left.")
+    def armor_loop():
+        count = 0
+        armor_select = input(f"\nWhich armor would {info.player.name} like to rent?\n> ")
+        for armor in info.armor_ls:
+            if armor.name.lower() != armor_select.lower():
+                count += 1
+            elif armor.name.lower() == armor_select.lower():
+                if armor.value <= info.player.gold.amount:
+                    info.player.armor = armor
+                    info.player.gold.amount -= armor.value
+                    lines_start(f"\n{info.player.name} has chosen to fight with {armor.name}. {info.player.name} has {info.player.gold.amount} gold left.")
+                    break
+                else:
+                    explain(f"{info.player.name} needs {armor.value - info.player.gold.amount} more gold to be able to afford that armor. Pick a different one.\n")
+                    armor_loop()
+                    break
+            if count == len(info.armor_ls):
+                explain("It looks like you haven't typed in a valid armor option. Try again.")
+                armor_loop()
                 break
+    show_armor()
+    armor_loop()
 
 def visit_shop():
     print(f"Before entering the arena, {info.player.name} passes by a shop called {info.shopkeeper.name}'s Gladiator Goods.\n")
@@ -210,8 +234,8 @@ def combat_stats():
 
 
 def attack_init():
-    true_speed_pl = round(random.randrange(((info.player.getSpeed()) * 2), info.speed_priority_mod))
-    true_speed_opp = round(random.randrange(((info.opponent.getSpeed()) * 2), info.speed_priority_mod))
+    true_speed_pl = round(random.randrange((round(info.player.getSpeed()) * 2), info.speed_priority_mod))
+    true_speed_opp = round(random.randrange((round(info.opponent.getSpeed()) * 2), info.speed_priority_mod))
 
     def attack_priority(scenario):
         if scenario == True:

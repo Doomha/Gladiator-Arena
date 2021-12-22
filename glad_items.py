@@ -81,7 +81,7 @@ class Chainmail(Armor):
 
 class Platemail(Armor):
     def __init__(self):
-        super().__init__("Platemail", 5, 8, 6)
+        super().__init__("Platemail", 10, 8, 6)
 
 class StuddedLeather(Armor):
     def __init__(self):
