@@ -118,13 +118,13 @@ def weapon_pick():
             if weapon.name.lower() != weapon_select.lower():
                 count += 1
             elif weapon.name.lower() == weapon_select.lower():
-                if weapon.value <= info.player.gold.amount:
+                if round(weapon.value) <= round(info.player.gold.amount * info.game_mode.pl_buys_mod):
                     info.player.weapon = weapon
-                    info.player.gold.amount -= weapon.value
+                    info.player.gold.amount -= round(weapon.value)
                     lines_start(f"\n{info.player.name} bought and eqipped a {info.player.weapon.name}. {info.player.name} has {info.player.gold.amount} gold left.")
                     break
                 else:
-                    explain(f"{info.player.name} needs {weapon.value - info.player.gold.amount} more gold to be able to afford that weapon. Pick a different one.\n")
+                    explain(f"{info.player.name} needs {round(weapon.value) - info.player.gold.amount} more gold to be able to afford that weapon. Pick a different one.\n")
                     weapon_loop()
                     break
             if count == len(info.weapon_ls):
@@ -145,13 +145,13 @@ def armor_pick():
             if armor.name.lower() != armor_select.lower():
                 count += 1
             elif armor.name.lower() == armor_select.lower():
-                if armor.value <= info.player.gold.amount:
+                if round(armor.value) <= round(info.player.gold.amount * info.game_mode.pl_buys_mod):
                     info.player.armor = armor
-                    info.player.gold.amount -= armor.value
+                    info.player.gold.amount -= round(armor.value)
                     lines_start(f"\n{info.player.name} bought and put on {info.player.armor.name}. {info.player.name} has {info.player.gold.amount} gold left.")
                     break
                 else:
-                    explain(f"{info.player.name} needs {armor.value - info.player.gold.amount} more gold to be able to afford that armor. Pick a different one.\n")
+                    explain(f"{info.player.name} needs {round(armor.value) - info.player.gold.amount} more gold to be able to afford that armor. Pick a different one.\n")
                     armor_loop()
                     break
             if count == len(info.armor_ls):
@@ -212,20 +212,30 @@ def valid_item_shop():
 
 def seller_item_check():
     #: Does seller have the item?
+    if info.seller == info.player:
+        price_mod = info.game_mode.pl_sells_mod
+    elif info.buyer == info.player:
+        price_mod = info.game_mode.pl_buys_mod
     if info.seller.pouch[info.item_find].amount == 0:
         explain(f"{info.seller.name} doesn't have enough {info.seller.pouch[info.item_find].name} right now.")
         continue_shopping()
         return False
-    elif info.buyer.gold.amount < info.seller.pouch[info.item_find].value:
+    elif info.buyer.gold.amount < round(info.seller.pouch[info.item_find].value * price_mod):
         explain(f"{info.buyer.name} doesn't have enough gold right now.")
         continue_shopping()
         return False
 
 def buy_from_seller():
-    info.buyer.gold.amount -= info.seller.pouch[info.item_find].value
+    if info.seller == info.player:
+        price_mod = info.game_mode.pl_sells_mod
+    elif info.buyer == info.player:
+        price_mod = info.game_mode.pl_buys_mod
+    bought_item_price = round(info.seller.pouch[info.item_find].value * price_mod)
+    info.buyer.gold.amount -= bought_item_price
+    info.seller.gold.amount += bought_item_price
     info.buyer.pouch[info.item_find].amount += 1
     info.seller.pouch[info.item_find].amount -= 1
-    explain(f"{info.buyer.name} bought 1 {info.buyer.pouch[info.item_find].name} from {info.seller.name}.\n")
+    explain(f"{info.buyer.name} bought 1 {info.buyer.pouch[info.item_find].name} from {info.seller.name} for {bought_item_price} gold.\n")
     continue_shopping()
     return
 

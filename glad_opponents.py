@@ -120,7 +120,7 @@ class Game():
 
 class EasyMode(Game):
     def __init__(self):
-        super().__init__(6, 9, "Easy", 2, 3, 7, 5, 11, 0, 4, 1, 6, 0.8, 1)
+        super().__init__(6, 9, "Easy", 2, 3, 7, 5, 11, 0, 4, 1, 6, 1, 1)
 
     def gen_easy_odds(self):
         global w_odds
@@ -138,7 +138,7 @@ class EasyMode(Game):
 
 class NormalMode(Game):
     def __init__(self):
-        super().__init__(5, 11, "Normal", 4, 2, 11, 5, 16, 0, 2, 1, 4, 1, 0.8)
+        super().__init__(5, 11, "Normal", 4, 2, 11, 5, 16, 0, 2, 1, 4, 1.2, 0.8)
 
     def gen_normal_odds(self):
         global w_odds
@@ -156,7 +156,7 @@ class NormalMode(Game):
 
 class HardMode(Game):
     def __init__(self):
-        super().__init__(5, 11, "Hard", 5, 6, 11, 0, 16, 0, 2, 0, 4, 1.2, 0.8)
+        super().__init__(5, 11, "Hard", 5, 6, 13, 0, 16, 0, 2, 0, 4, 1.5, 0.7)
 
     def gen_hard_odds(self):
         global w_odds

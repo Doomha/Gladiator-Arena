@@ -34,7 +34,7 @@ class Person():
             if self.pouch[a].name == "gold":
                 print(f"{self.pouch[a].name}: {self.pouch[a].amount}")
             elif self.pouch[a].amount != 0:
-                print(f"{self.pouch[a].name}: {self.pouch[a].amount} - price: {self.pouch[a].value}")
+                print(f"{self.pouch[a].name}: {self.pouch[a].amount} - price: {round(self.pouch[a].value * info.game_mode.pl_buys_mod)}")
             a += 1
         print("-" * 10, "\n")
 

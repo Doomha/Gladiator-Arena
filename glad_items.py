@@ -23,7 +23,7 @@ class DefensePotion(Item):
 
 class SpeedPotion(Item):
     def __init__(self, amount):
-        super().__init__("speed potions", 10, amount, 0, 0, 0, 5)
+        super().__init__("speed potions", 10, amount, 0, 0, 0, 3)
 
 class Sweetcakes(Item):
     def __init__(self, amount):
@@ -44,7 +44,7 @@ class Ranged_weapon(Weapon):
 
 class Bow(Ranged_weapon):
     def __init__(self):
-        super().__init__("Bow", 5, 9, 5)
+        super().__init__("Bow", 5, 5, 5)
 
 #: Melee weapons
 class Melee_weapon(Weapon):
@@ -53,11 +53,11 @@ class Melee_weapon(Weapon):
 
 class Sword(Melee_weapon):
     def __init__(self):
-        super().__init__("Sword", 6, 6, 7)
+        super().__init__("Sword", 6, 5, 7)
 
 class Spear(Melee_weapon):
     def __init__(self):
-        super().__init__("Spear", 4, 4, 5)
+        super().__init__("Spear", 4, 4, 4)
 
 class Warhammer(Melee_weapon):
     def __init__(self):
@@ -77,11 +77,11 @@ class Armor(Item):
 
 class Chainmail(Armor):
     def __init__(self):
-        super().__init__("Chainmail", 3, 5, 4)
+        super().__init__("Chainmail", 4, 5, 4)
 
 class Platemail(Armor):
     def __init__(self):
-        super().__init__("Platemail", 10, 8, 6)
+        super().__init__("Platemail", 8, 8, 6)
 
 class StuddedLeather(Armor):
     def __init__(self):
