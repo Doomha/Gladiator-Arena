@@ -6,7 +6,7 @@ import glad_items as items
 import glad_inventory as inventory
 
 class Game():
-    def __init__(self, pl_low, pl_high, mode_name, num_opponents, stats_low, stats_high, gold_low, gold_high, potion_low, potion_high, swt_low, swt_high):
+    def __init__(self, pl_low, pl_high, mode_name, num_opponents, stats_low, stats_high, gold_low, gold_high, potion_low, potion_high, swt_low, swt_high, pl_buys_mod, pl_sells_mod):
         self.pl_low = pl_low
         self.pl_high = pl_high
         self.mode_name = mode_name
@@ -19,6 +19,8 @@ class Game():
         self.potion_high = potion_high
         self.swt_low = swt_low
         self.swt_high = swt_high
+        self.pl_buys_mod = pl_buys_mod
+        self.pl_sells_mod = pl_sells_mod
 
     def gen_pl_stats(self):
         info.player.skill = random.randrange(self.pl_low, self.pl_high)
@@ -118,7 +120,7 @@ class Game():
 
 class EasyMode(Game):
     def __init__(self):
-        super().__init__(6, 9, "Easy", 2, 3, 7, 5, 11, 1, 5, 1, 6)
+        super().__init__(6, 9, "Easy", 2, 3, 7, 5, 11, 0, 4, 1, 6, 0.8, 1)
 
     def gen_easy_odds(self):
         global w_odds
@@ -136,7 +138,7 @@ class EasyMode(Game):
 
 class NormalMode(Game):
     def __init__(self):
-        super().__init__(5, 11, "Normal", 4, 2, 11, 5, 16, 0, 2, 1, 4)
+        super().__init__(5, 11, "Normal", 4, 2, 11, 5, 16, 0, 2, 1, 4, 1, 0.8)
 
     def gen_normal_odds(self):
         global w_odds
@@ -154,7 +156,7 @@ class NormalMode(Game):
 
 class HardMode(Game):
     def __init__(self):
-        super().__init__(6, 10, "Hard", 5, 6, 11, 0, 16, 0, 2, 0, 4)
+        super().__init__(5, 11, "Hard", 5, 6, 11, 0, 16, 0, 2, 0, 4, 1.2, 0.8)
 
     def gen_hard_odds(self):
         global w_odds
