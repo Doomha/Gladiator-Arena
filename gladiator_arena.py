@@ -26,21 +26,21 @@ def explanation():
 def show_difficulty():
     diff_input = input("Would you like to choose the level of difficulty?\n> ")
     if diff_input.lower() != "yes":
-        info.game_mode = info.game_mode_ls[1]
+        info.game_mode = oppo.NormalMode()
     elif diff_input.lower() == "yes":
         print("Here are the levels of difficulty:\n")
         count = 0
         for a in enumerate(info.game_mode_ls):
-            print(info.game_mode_ls[count])
+            print(info.game_mode_ls[count].mode_name)
             count += 1
         choose_difficulty()
-    explain(f"\nYou're playing on {info.game_mode} mode.")
+    explain(f"\nYou're playing on {info.game_mode.mode_name} mode.")
 
 def choose_difficulty():
     chosen_diff = input(f"\nType in the level of difficulty you would like to play.\n> ")
     count = 0
     for b in enumerate(info.game_mode_ls):
-        if chosen_diff.lower() == info.game_mode_ls[count].lower():
+        if chosen_diff.lower() == info.game_mode_ls[count].mode_name.lower():
             info.game_mode = info.game_mode_ls[count]
         elif count == len(info.game_mode_ls):
             explain("It looks like you haven't typed in a valid game mode. Try again.")
@@ -58,37 +58,108 @@ def fight_explain():
     explain("\n\n\tYour character will also be able to buy, sell, and consume items that can boost your stats. Make sure to pace yourself though--some of your opponents will be quite tough!\n\n\t\t\t\t\tGood luck!\n\n")
     explain("\n\n\n\n\n")
 
+def pl_stats():
+    info.game_mode.gen_pl_stats()
+    explain(f"\nHere is {info.player.name}'s skill: {info.player.skill}, speed: {info.player.speed}, strength: {info.player.strength}.\n")
+    set_player_stats()
+
+def show_gold():
+    lines_start(f"\n{info.player.name} has {info.player.gold.amount} gold. Here are the options {info.player.name} can choose from:")
+
+def visit_smithy():
+    a = input(f"Would {info.player.name} like to enter the smithy?\n> ")
+    if a.lower() != "yes":
+        if info.player.weapon == None or info.player.armor == None:
+            explain(f"It looks like {info.player.name} isn't properly eqipped yet. Visit the smithy to purchase a weapon and armor.\n")
+            smithy_loop()
+        else:
+            return
+    else:
+        smithy_loop()
+
+def smithy_loop():
+    if info.player.weapon == None:
+        show_gold()
+        weapon_pick()
+    if info.player.armor == None:
+        show_gold()
+        armor_pick()
+        return
+    weapon_price = round(info.player.weapon.value * info.game_mode.pl_sells_mod)
+    b = input(f"Would {info.player.name} like to sell their {info.player.weapon.name} and buy something else?\n> ")
+    if b.lower() == "yes" or b.lower() == "y":
+        print(f"The smith inspects {info.player.name}'s {info.player.weapon.name}, and is willing to pay {weapon_price} for it.")
+        c = input(f"Would {info.player.name} like to sell their {info.player.weapon.name}?\n> ")
+        if c.lower() == "yes" or b.lower() == "y":
+            info.player.gold.amount += weapon_price
+            info.player.weapon = None
+            smithy_loop()
+    armor_price = round(info.player.armor.value * info.game_mode.pl_sells_mod)
+    d = input(f"Would {info.player.name} like to sell their {info.player.armor.name} and buy something else?\n> ")
+    if d.lower() == "yes" or d.lower() == "y":
+        print(f"The smith inspects {info.player.name}'s {info.player.armor.name}, and is willing to pay {armor_price} for it.")
+        e = input(f"Would {info.player.name} like to sell their {info.player.armor.name}?\n> ")
+        if e.lower() == "yes" or e.lower() == "y":
+            info.player.gold.amount += armor_price
+            info.player.armor = None
+            smithy_loop()
+    f = input(f"Is {info.player.name} ready to leave?\n> ")
+    if f.lower() != "yes":
+        smithy_loop()
+
 def weapon_pick():
-    lines_start(f"\n{info.player.name} has {info.player.gold.amount} gold. Here are the weapons {info.player.name} can choose from:")
-    for weapon in info.weapon_ls:
-        if weapon.value <= info.player.gold.amount:
-            print(f"{weapon.name} -- speed: {weapon.speed} damage: {weapon.damage} cost: {weapon.value}")
-    lines_end("")
-    print(f"\nOut of these {len(info.weapon_ls)} options, {info.player.name} can only pick one. You'll have to pay for whatever weapon you choose.\n")
-    for weapon in info.weapon_ls:
-        if weapon.value <= info.player.gold.amount:
-            weapon_select = input(f"Would {info.player.name} like to use a {weapon.name}?\n> ")
-            if weapon_select.lower() == 'yes' or weapon_select.lower() == 'y':
-                info.player.weapon = weapon
-                info.player.gold.amount -= weapon.value
-                lines_start(f"\n{info.player.name} has chosen to fight with a {weapon.name}. {info.player.name} has {info.player.gold.amount} gold left.")
+    def show_weapons():
+        for weapon in info.weapon_ls:
+            print(f"{weapon.name} -- speed: {weapon.speed} damage: {weapon.damage} cost: {round(weapon.value * info.game_mode.pl_buys_mod)}")
+    def weapon_loop():
+        count = 0
+        weapon_select = input(f"\nWhich weapon would {info.player.name} like to buy?\n> ")
+        for weapon in info.weapon_ls:
+            if weapon.name.lower() != weapon_select.lower():
+                count += 1
+            elif weapon.name.lower() == weapon_select.lower():
+                if weapon.value <= info.player.gold.amount:
+                    info.player.weapon = weapon
+                    info.player.gold.amount -= weapon.value
+                    lines_start(f"\n{info.player.name} bought and eqipped a {info.player.weapon.name}. {info.player.name} has {info.player.gold.amount} gold left.")
+                    break
+                else:
+                    explain(f"{info.player.name} needs {weapon.value - info.player.gold.amount} more gold to be able to afford that weapon. Pick a different one.\n")
+                    weapon_loop()
+                    break
+            if count == len(info.weapon_ls):
+                explain("It looks like you haven't typed in a valid weapon option. Try again.")
+                weapon_loop()
                 break
+    show_weapons()
+    weapon_loop()
 
 def armor_pick():
-    lines_start(f"\n{info.player.name} has {info.player.gold.amount} gold. Here are the armor options {info.player.name} can choose from:")
-    for armor in info.armor_ls:
-        if armor.value <= info.player.gold.amount:
-            print(f"{armor.name} -- value: {armor.value} defense: {armor.defense} weight: {armor.weight} cost: {armor.value}")
-    lines_end("")
-    print(f"\nOut of these {len(info.armor_ls)} options, {info.player.name} can only pick one.You'll have to pay for whatever armor you choose.\n")
-    for armor in info.armor_ls:
-        if armor.value <= info.player.gold.amount:
-            armor_select = input(f"Would {info.player.name} like to use {armor.name}?\n> ")
-            if armor_select.lower() == 'yes' or armor_select.lower() == 'y':
-                info.player.armor = armor
-                info.player.gold.amount -= armor.value
-                lines_start(f"\n{info.player.name} has chosen to fight with {armor.name}. {info.player.name} has {info.player.gold.amount} gold left.")
+    def show_armor():
+        for armor in info.armor_ls:
+            print(f"{armor.name} -- defense: {armor.defense} weight: {armor.weight} cost: {round(armor.value * info.game_mode.pl_buys_mod)}")
+    def armor_loop():
+        count = 0
+        armor_select = input(f"\nWhich armor would {info.player.name} like to buy?\n> ")
+        for armor in info.armor_ls:
+            if armor.name.lower() != armor_select.lower():
+                count += 1
+            elif armor.name.lower() == armor_select.lower():
+                if armor.value <= info.player.gold.amount:
+                    info.player.armor = armor
+                    info.player.gold.amount -= armor.value
+                    lines_start(f"\n{info.player.name} bought and put on {info.player.armor.name}. {info.player.name} has {info.player.gold.amount} gold left.")
+                    break
+                else:
+                    explain(f"{info.player.name} needs {armor.value - info.player.gold.amount} more gold to be able to afford that armor. Pick a different one.\n")
+                    armor_loop()
+                    break
+            if count == len(info.armor_ls):
+                explain("It looks like you haven't typed in a valid armor option. Try again.")
+                armor_loop()
                 break
+    show_armor()
+    armor_loop()
 
 def visit_shop():
     print(f"Before entering the arena, {info.player.name} passes by a shop called {info.shopkeeper.name}'s Gladiator Goods.\n")
@@ -181,9 +252,18 @@ def arena_enter():
 
     opponent_input_check()
     info.opponent = info.contestants_ls[info.valid_opponent_input - 1]
-    oppo.get_weapon()
-    oppo.get_armor()
-    explain(f"\n{info.opponent.name} will be fighting you with a {info.opponent.weapon.name}, which is a {info.opponent.weapon.w_type} weapon. {info.opponent.name} is also equipped with {info.opponent.armor.name}. Good luck!\n")
+
+    def set_opponent_equipment():
+        info.game_mode.gen_weapon_containers()
+        info.game_mode.gen_armor_containers()
+        oppo.find_mode_odds(info.game_mode)
+        info.game_mode.gen_weapon()
+        info.game_mode.gen_armor()
+        info.game_mode.set_opponent_weapon()
+        info.game_mode.set_opponent_armor()
+    set_opponent_equipment()
+
+    explain(f"\n{info.opponent.name} will be fighting {info.player.name} with a {info.opponent.weapon.name}, which is a {info.opponent.weapon.w_type} weapon. {info.opponent.name} is also equipped with {info.opponent.armor.name}. Good luck!\n")
 
 def combat_stats():
     lines_end("\n")
@@ -197,29 +277,32 @@ def combat_stats():
 
 
 def attack_init():
+    true_speed_pl = round(random.randrange((round(info.player.getSpeed()) * 2), info.speed_priority_mod))
+    true_speed_opp = round(random.randrange((round(info.opponent.getSpeed()) * 2), info.speed_priority_mod))
+
     def attack_priority(scenario):
         if scenario == True:
-            explain(f"\n{faster} is faster than {slower}, so {faster} attacks first.\n")
+            print(f"\n{faster} gains the upper hand and attacks {slower}.\n")
         else:
             print(f"\n\nNeither {info.player.name} or {info.opponent.name} is faster.")
 
-    if round(info.player.getSpeed()) == round(info.opponent.getSpeed()):
+    if true_speed_pl == true_speed_opp:
         chance = random.randrange(0, 2)
         if chance == 0:
             attack_priority(False)
-            explain(f"However, {info.opponent.name} gains the upper hand and attacks.")
-            info.turnCount += 1
+            print(f"However, {info.opponent.name} gains the upper hand and attacks.\n")
         else:
             attack_priority(False)
-            explain(f"However, {info.player.name} gains the upper hand and attacks.")
+            print(f"However, {info.player.name} gains the upper hand and attacks.\n")
     else:
-        if info.player.getSpeed() > info.opponent.getSpeed():
+        if true_speed_pl > true_speed_opp:
             faster = info.player.name
             slower = info.opponent.name
-        elif info.player.getSpeed() < info.opponent.getSpeed():
+            info.turnCount = info.player
+        elif true_speed_pl < true_speed_opp:
             faster = info.opponent.name
             slower = info.player.name
-            info.turnCount += 1
+            info.turnCount = info.opponent
         attack_priority(True)
         inventory_loop()
     attack()
@@ -227,7 +310,7 @@ def attack_init():
 
 def attack():
     chance = random.randrange(0, info.hit_chance)
-    if info.turnCount % 2 == 0:
+    if info.turnCount == info.player:
         source = info.player
         target = info.opponent
     else:
@@ -241,15 +324,14 @@ def attack():
             print(f"{source.name} did {damage_done} damage. {target.name}'s {target.armor.name} blocked {round(target.defense)} damage.")
             target.takeDamage(damage_done)
         else:
-            print(f"1 damage was done.")
+            print(f"{source.name} did 1 damage to {target.name}.")
             target.takeDamage(1)
         print(f"{target.name} has {target.health} health left.\n")
         win_condition()
         inventory_loop()
     else:
-        explain(f"{source.name} attack misses.\n")
-    info.turnCount += 1
-    attack()
+        explain(f"{source.name}'s attack misses.\n")
+    attack_init()
 
 def inventory_loop():
     if prompt_inventory() == True:
@@ -324,16 +406,7 @@ def win_condition():
         print(f"\n\n\n\t\t\t\t\t{info.player.name} lost.\n\n\n\n\n")
         r = input("Would you like to play again?\n> ")
         if r.lower() == "yes":
-            reset_player_stats()
-            lines_start("")
-            classes.get_player_name()
-            weapon_pick()
-            armor_pick()
-            visit_shop()
-            oppo.generate_stats(info.game_mode)
-            arena_enter()
-            combat_stats()
-            attack_init()
+            main_script()
         else:
             quit()
 
@@ -346,10 +419,17 @@ def play_again():
         else:
             play_again()
     reset_player_stats()
+    visit_smithy()
     visit_shop()
     arena_enter()
     combat_stats()
     attack_init()
+
+def set_player_stats():
+    info.health_reset = info.player.health
+    info.strength_reset = info.player.strength
+    info.defense_reset = info.player.defense
+    info.speed_reset = info.player.speed
 
 def reset_player_stats():
     info.player.strength = info.strength_reset
@@ -377,14 +457,17 @@ def opponent_drop():
             opponent_drop()
 
 
+def main_script():
+    explanation()
+    show_difficulty()
+    classes.get_player_name()
+    info.game_mode.gen_opponents()
+    pl_stats()
+    visit_smithy()
+    visit_shop()
+    info.game_mode.generate_stats()
+    arena_enter()
+    combat_stats()
+    attack_init()
 
-explanation()
-show_difficulty()
-classes.get_player_name()
-weapon_pick()
-armor_pick()
-visit_shop()
-oppo.generate_stats(info.game_mode)
-arena_enter()
-combat_stats()
-attack_init()
+main_script()

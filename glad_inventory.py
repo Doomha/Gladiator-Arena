@@ -42,7 +42,7 @@ class Person():
     def item_exist(self):
         global item_locator
         item_locator = len(self.pouch) - 1
-        p = input("What would you like to consume?\n> ")
+        p = input(f"What would {info.player.name} like to consume?\n> ")
         item_picked = p.lower()
         for n in self.pouch:
             if self.pouch[item_locator].name == item_picked:

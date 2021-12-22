@@ -6,11 +6,32 @@ import glad_items as items
 import glad_inventory as inventory
 
 class Game():
-    def __init__(self, num_opponents, game_difficulty, item_quality, stats_quality):
+    def __init__(self, pl_low, pl_high, mode_name, num_opponents, stats_low, stats_high, gold_low, gold_high, potion_low, potion_high, swt_low, swt_high, pl_buys_mod, pl_sells_mod):
+        self.pl_low = pl_low
+        self.pl_high = pl_high
+        self.mode_name = mode_name
         self.num_opponents = num_opponents
-        self.game_difficulty = game_difficulty
-        self.item_quality = item_quality
-        self.stats_quality = stats_quality
+        self.stats_low = stats_low
+        self.stats_high = stats_high
+        self.gold_low = gold_low
+        self.gold_high = gold_high
+        self.potion_low = potion_low
+        self.potion_high = potion_high
+        self.swt_low = swt_low
+        self.swt_high = swt_high
+        self.pl_buys_mod = pl_buys_mod
+        self.pl_sells_mod = pl_sells_mod
+
+    def gen_pl_stats(self):
+        info.player.skill = random.randrange(self.pl_low, self.pl_high)
+        info.player.speed = random.randrange(self.pl_low, self.pl_high)
+        info.player.strength = random.randrange(self.pl_low, self.pl_high)
+
+    def gen_opponents(self):
+        remove_conts = len(info.contestants_ls) - self.num_opponents
+        for a in range(remove_conts):
+            r = random.randrange(len(info.contestants_ls) - 1)
+            del info.contestants_ls [r]
 
 
     #: Creates a dictionary from weapon_stats & weapon_names lists.
@@ -27,26 +48,9 @@ class Game():
         unsorted_weapon_dict = dict((k, v) for k, v in zip(weapon_names, weapon_stats))
         sorted_weapon_dict = sorted(unsorted_weapon_dict.items(), key=lambda x: x[1], reverse=True)
 
-    #: Best weapons and best odds are at the front.
-    def generate_weapon(self, mode):
+    def gen_weapon(self):
         global weapon_str
-        odds = []
-        def find_odds():
-            r = len(sorted_weapon_dict)
-            if mode == "Normal":
-                for b in sorted_weapon_dict:
-                    odds.append(r * 10)
-                    r -= 1
-            elif mode == "Easy":
-                for b in sorted_weapon_dict:
-                    odds.append(r * 10)
-                    r += 1
-            elif mode == "Hard":
-                for b in sorted_weapon_dict:
-                    odds.append(math.exp(r) * 10)
-                    r -=1
-        find_odds()
-        opponent_weapon_pick = random.choices(sorted_weapon_dict, odds, k = 1)
+        opponent_weapon_pick = random.choices(sorted_weapon_dict, w_odds, k = 1)
         q = (str(opponent_weapon_pick)).split(",")
         weapon_str = q[0].replace("'", "").replace("(", "").replace("[", "")
 
@@ -75,25 +79,9 @@ class Game():
         sorted_armor_dict = sorted(unsorted_armor_dict.items(), key=lambda x: x[1], reverse=True)
 
     #: Best armors and best odds are at the front.
-    def generate_armor(self, mode):
+    def gen_armor(self):
         global armor_str
-        odds = []
-        def find_odds():
-            r = len(sorted_armor_dict)
-            if mode == "Normal":
-                for b in sorted_armor_dict:
-                    odds.append(r * 10)
-                    r -= 1
-            elif mode == "Easy":
-                for b in sorted_armor_dict:
-                    odds.append(r * 10)
-                    r += 1
-            elif mode == "Hard":
-                for b in sorted_armor_dict:
-                    odds.append(math.exp(r) * 10)
-                    r -=1
-        find_odds()
-        opponent_armor_pick = random.choices(sorted_armor_dict, odds, k = 1)
+        opponent_armor_pick = random.choices(sorted_armor_dict, a_odds, k = 1)
         q = (str(opponent_armor_pick)).split(",")
         armor_str = q[0].replace("'", "").replace("(", "").replace("[", "")
 
@@ -106,62 +94,89 @@ class Game():
             elif info.armor_ls[m].name == armor_str:
                 info.opponent.armor = info.armor_ls[m]
 
+    def generate_stats(self):
+        count = 0
+        for x in info.contestants_ls:
+            rand_stat = random.sample(range(self.stats_low, self.stats_high), 3)
+            info.contestants_ls[count].skill = rand_stat[0]
+            info.contestants_ls[count].speed = rand_stat[1]
+            info.contestants_ls[count].strength = rand_stat[2]
 
-test_game = Game(3, 0, 0, 0)
+            rand_gold = random.randrange(self.gold_low, self.gold_high)
+            info.contestants_ls[count].gold.amount = rand_gold
 
-def get_weapon():
-    a = test_game
-    a.gen_weapon_containers()
-    a.generate_weapon(info.game_mode)
-    a.set_opponent_weapon()
+            rand_potion_ls = []
+            for y in range(3):
+                rand_potion = random.randrange(self.potion_low, self.potion_high)
+                rand_potion_ls.append(rand_potion)
+            info.contestants_ls[count].strength_potion.amount = rand_potion_ls[0]
+            info.contestants_ls[count].defense_potion.amount = rand_potion_ls[1]
+            info.contestants_ls[count].speed_potion.amount = rand_potion_ls[2]
 
-def get_armor():
-    a = test_game
-    a.gen_armor_containers()
-    a.generate_armor(info.game_mode)
-    a.set_opponent_armor()
+            rand_swt = random.randrange(self.swt_low, self.swt_high)
+            info.contestants_ls[count].sweetcakes.amount = rand_swt
+            count += 1
 
-def generate_stats(mode):
-    count = 0
-    if mode == "Normal":
-        stats_range = [3, 9]
-        gold_range = [0, 11]
-        potions_range = [0, 2]
-        sweetcakes_range = [0, 3]
 
-    elif mode == "Easy":
-        stats_range = [1, 6]
-        gold_range = [0, 11]
-        potions_range = [0, 2]
-        sweetcakes_range = [0, 4]
+class EasyMode(Game):
+    def __init__(self):
+        super().__init__(6, 9, "Easy", 2, 3, 7, 5, 11, 0, 4, 1, 6, 0.8, 1)
 
-    elif mode == "Hard":
-        stats_range = [5, 11]
-        gold_range = [7, 15]
-        potions_range = [0, 1]
-        sweetcakes_range = [0, 2]
+    def gen_easy_odds(self):
+        global w_odds
+        global a_odds
+        w = len(sorted_weapon_dict)
+        a = len(sorted_armor_dict)
+        w_odds = []
+        a_odds = []
+        for b in sorted_weapon_dict:
+            w_odds.append(w * 10)
+            w += 1
+        for b in sorted_armor_dict:
+            a_odds.append(a * 10)
+            a += 1
 
-    for w in info.contestants_ls:
-        set = [None, None, None, None, None, None, None, None]
-        q = 0
-        for x in list(range(3)):
-            set[q] = random.randrange(stats_range[0],stats_range[1])
-            q += 1
-        info.contestants_ls[count].skill = set[0]
-        info.contestants_ls[count].speed = set[1]
-        info.contestants_ls[count].strength = set[2]
-        for x in list(range(1)):
-            set[q] = random.randrange(gold_range[0],gold_range[1])
-            q += 1
-        info.contestants_ls[count].gold = set[3]
-        for x in list(range(3)):
-            set[q] = random.randrange(potions_range[0],potions_range[1])
-            q += 1
-        info.contestants_ls[count].strength_potion = set[4]
-        info.contestants_ls[count].defense_potion = set[5]
-        info.contestants_ls[count].speed_potion = set[6]
-        for x in list(range(1)):
-            set[q] = random.randrange(sweetcakes_range[0],sweetcakes_range[1])
-            q += 1
-        info.contestants_ls[count].sweetcakes = set[7]
-        count += 1
+class NormalMode(Game):
+    def __init__(self):
+        super().__init__(5, 11, "Normal", 4, 2, 11, 5, 16, 0, 2, 1, 4, 1, 0.8)
+
+    def gen_normal_odds(self):
+        global w_odds
+        global a_odds
+        w = len(sorted_weapon_dict)
+        a = len(sorted_armor_dict)
+        w_odds = []
+        a_odds = []
+        for b in sorted_weapon_dict:
+            w_odds.append(w * 10)
+            w -= 1
+        for b in sorted_armor_dict:
+            a_odds.append(a * 10)
+            a -= 1
+
+class HardMode(Game):
+    def __init__(self):
+        super().__init__(5, 11, "Hard", 5, 6, 11, 0, 16, 0, 2, 0, 4, 1.2, 0.8)
+
+    def gen_hard_odds(self):
+        global w_odds
+        global a_odds
+        w = len(sorted_weapon_dict)
+        a = len(sorted_armor_dict)
+        w_odds = []
+        a_odds = []
+        for b in sorted_weapon_dict:
+            w_odds.append(math.exp(w) * 10)
+            w -= 1
+        for b in sorted_armor_dict:
+            a_odds.append(math.exp(a) * 10)
+            a -= 1
+
+
+def find_mode_odds(self):
+    if self.mode_name == "Easy":
+        self.gen_easy_odds()
+    elif self.mode_name == "Normal":
+        self.gen_normal_odds()
+    elif self.mode_name == "Hard":
+        self.gen_hard_odds()

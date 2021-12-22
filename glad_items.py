@@ -44,7 +44,7 @@ class Ranged_weapon(Weapon):
 
 class Bow(Ranged_weapon):
     def __init__(self):
-        super().__init__("Bow", 6, 5, 7)
+        super().__init__("Bow", 5, 9, 5)
 
 #: Melee weapons
 class Melee_weapon(Weapon):
@@ -53,15 +53,15 @@ class Melee_weapon(Weapon):
 
 class Sword(Melee_weapon):
     def __init__(self):
-        super().__init__("Sword", 6, 6, 6)
+        super().__init__("Sword", 6, 6, 7)
 
 class Spear(Melee_weapon):
     def __init__(self):
-        super().__init__("Spear", 6, 4, 8)
+        super().__init__("Spear", 4, 4, 5)
 
-class Rock(Melee_weapon):
+class Warhammer(Melee_weapon):
     def __init__(self):
-        super().__init__("Rock", 1, 2, 2)
+        super().__init__("Warhammer", 5, 2, 8)
 
 class Fist(Melee_weapon):
     def __init__(self):
@@ -77,11 +77,15 @@ class Armor(Item):
 
 class Chainmail(Armor):
     def __init__(self):
-        super().__init__("Chainmail", 3, 4, 3)
+        super().__init__("Chainmail", 3, 5, 4)
 
 class Platemail(Armor):
     def __init__(self):
-        super().__init__("Platemail", 5, 8, 6)
+        super().__init__("Platemail", 10, 8, 6)
+
+class StuddedLeather(Armor):
+    def __init__(self):
+        super().__init__("Studded Leather", 2, 3, 2)
 
 class Tunic(Armor):
     def __init__(self):
