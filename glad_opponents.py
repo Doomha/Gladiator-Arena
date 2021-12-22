@@ -138,7 +138,7 @@ class EasyMode(Game):
 
 class NormalMode(Game):
     def __init__(self):
-        super().__init__(5, 11, "Normal", 4, 2, 11, 5, 16, 0, 2, 1, 4, 1.2, 0.8)
+        super().__init__(5, 11, "Normal", 4, 2, 11, 5, 16, 0, 2, 1, 4, 1.3, 0.8)
 
     def gen_normal_odds(self):
         global w_odds

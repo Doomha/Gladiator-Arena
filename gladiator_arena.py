@@ -77,6 +77,13 @@ def visit_smithy():
     else:
         smithy_loop()
 
+def smithy_exit():
+    f = input(f"Is {info.player.name} ready to leave?\n> ")
+    if f.lower() == "yes" or f.lower() == "y" or f.lower() == "":
+        return
+    else:
+        smithy_loop()
+
 def smithy_loop():
     if info.player.weapon == None:
         show_gold()
@@ -85,27 +92,36 @@ def smithy_loop():
         show_gold()
         armor_pick()
         return
+    sell_weapon()
+    sell_armor()
+
+def sell_weapon():
     weapon_price = round(info.player.weapon.value * info.game_mode.pl_sells_mod)
     b = input(f"Would {info.player.name} like to sell their {info.player.weapon.name} and buy something else?\n> ")
     if b.lower() == "yes" or b.lower() == "y":
-        print(f"The smith inspects {info.player.name}'s {info.player.weapon.name}, and is willing to pay {weapon_price} for it.")
+        print(f"The smith inspects {info.player.name}'s {info.player.weapon.name}, and is willing to pay {weapon_price} gold for it.")
         c = input(f"Would {info.player.name} like to sell their {info.player.weapon.name}?\n> ")
         if c.lower() == "yes" or b.lower() == "y":
             info.player.gold.amount += weapon_price
             info.player.weapon = None
-            smithy_loop()
+            show_gold()
+            weapon_pick()
+            smithy_exit()
+            return
+
+def sell_armor():
     armor_price = round(info.player.armor.value * info.game_mode.pl_sells_mod)
     d = input(f"Would {info.player.name} like to sell their {info.player.armor.name} and buy something else?\n> ")
     if d.lower() == "yes" or d.lower() == "y":
-        print(f"The smith inspects {info.player.name}'s {info.player.armor.name}, and is willing to pay {armor_price} for it.")
+        print(f"The smith inspects {info.player.name}'s {info.player.armor.name}, and is willing to pay {armor_price} gold for it.")
         e = input(f"Would {info.player.name} like to sell their {info.player.armor.name}?\n> ")
         if e.lower() == "yes" or e.lower() == "y":
             info.player.gold.amount += armor_price
             info.player.armor = None
-            smithy_loop()
-    f = input(f"Is {info.player.name} ready to leave?\n> ")
-    if f.lower() != "yes":
-        smithy_loop()
+            show_gold()
+            armor_pick()
+            smithy_exit()
+            return
 
 def weapon_pick():
     def show_weapons():
@@ -120,11 +136,11 @@ def weapon_pick():
             elif weapon.name.lower() == weapon_select.lower():
                 if round(weapon.value) <= round(info.player.gold.amount * info.game_mode.pl_buys_mod):
                     info.player.weapon = weapon
-                    info.player.gold.amount -= round(weapon.value)
+                    info.player.gold.amount -= round(weapon.value * info.game_mode.pl_buys_mod)
                     lines_start(f"\n{info.player.name} bought and eqipped a {info.player.weapon.name}. {info.player.name} has {info.player.gold.amount} gold left.")
                     break
                 else:
-                    explain(f"{info.player.name} needs {round(weapon.value) - info.player.gold.amount} more gold to be able to afford that weapon. Pick a different one.\n")
+                    explain(f"{info.player.name} needs {round(weapon.value * info.game_mode.pl_buys_mod) - info.player.gold.amount} more gold to be able to afford that weapon. Pick a different one.\n")
                     weapon_loop()
                     break
             if count == len(info.weapon_ls):
@@ -147,11 +163,11 @@ def armor_pick():
             elif armor.name.lower() == armor_select.lower():
                 if round(armor.value) <= round(info.player.gold.amount * info.game_mode.pl_buys_mod):
                     info.player.armor = armor
-                    info.player.gold.amount -= round(armor.value)
+                    info.player.gold.amount -= round(armor.value * info.game_mode.pl_buys_mod)
                     lines_start(f"\n{info.player.name} bought and put on {info.player.armor.name}. {info.player.name} has {info.player.gold.amount} gold left.")
                     break
                 else:
-                    explain(f"{info.player.name} needs {round(armor.value) - info.player.gold.amount} more gold to be able to afford that armor. Pick a different one.\n")
+                    explain(f"{info.player.name} needs {round(armor.value * info.game_mode.pl_buys_mod) - info.player.gold.amount} more gold to be able to afford that armor. Pick a different one.\n")
                     armor_loop()
                     break
             if count == len(info.armor_ls):
