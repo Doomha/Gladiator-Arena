@@ -301,8 +301,54 @@ def combat_stats():
     print(f"\n{info.opponent.name}'s skill: {round(info.opponent.skill)}, speed: {round(info.opponent.getSpeed())}, damage: {round(info.opponent.getDamage())}, defense: {round(info.opponent.defense)}.\n")
     explain(f"{info.player.name}'s skill: {round(info.player.skill)}, speed: {round(info.player.getSpeed())}, damage: {round(info.player.getDamage())}, defense: {round(info.player.defense)}.\n")
 
-
 def attack_init():
+    def get_aggression(self):
+        if self.pl_controlled == False:
+            if info.game_mode.mode_name == "Easy":
+                self.fight_conservative()
+                fight_type = "conservatively"
+            elif info.game_mode.mode_name == "Normal":
+                d = random.randrange(4)
+                if d == 1:
+                    self.fight_conservative()
+                    fight_type = "conservatively"
+                elif d == 2:
+                    fight_type = "normally"
+                    return
+                else:
+                    self.fight_aggressive()
+                    fight_type = "aggressively"
+            elif info.game_mode.mode_name == "Hard":
+                if self.health >= 4:
+                    self.fight_aggressive()
+                    fight_type = "aggressively"
+                elif info.player.health > (self.health - 4):
+                    self.fight_aggressive()
+                    fight_type = "aggressively"
+                elif self.health > (info.player.health - 5):
+                    self.fight_conservative()
+                    fight_type = "conservatively"
+                elif self.skill > info.player.skill and self.speed > info.player.speed:
+                    fight_type = "normally"
+                    return
+                else:
+                    fight_type = "normally"
+                    return
+        elif self.pl_controlled == True:
+            f = input(f"Would {info.player.name} like to attack conservatively (type 'c'), aggressively (type 'a'), or normal (press enter)?\n> ")
+            if f.lower() == "c":
+                self.fight_conservative()
+                fight_type = "conservatively"
+            elif f.lower() == "a":
+                self.fight_aggressive()
+                fight_type = "aggressively"
+            else:
+                fight_type = "normally"
+                return
+        print(f"\n{self.name} is fighting {fight_type}.")
+
+    get_aggression(info.player)
+    get_aggression(info.opponent)
     true_speed_pl = round(random.randrange((round(info.player.getSpeed()) * 2), info.speed_priority_mod))
     true_speed_opp = round(random.randrange((round(info.opponent.getSpeed()) * 2), info.speed_priority_mod))
 

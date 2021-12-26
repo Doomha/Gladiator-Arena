@@ -6,11 +6,11 @@ import glad_inventory as inventory
 
 
 class Contestant(inventory.Person):
-    def __init__(self, name, pl_controlled, skill, speed, strength):
+    def __init__(self, name, pl_controlled):
         super().__init__(name, pl_controlled, 15, 0, 0, 0, 0)
-        self.skill = skill
-        self.speed = speed
-        self.strength = strength
+        self.skill = 0
+        self.speed = 0
+        self.strength = 0
         self.health = 10
         self.weapon = None
         self.defense = 0
@@ -32,6 +32,15 @@ class Contestant(inventory.Person):
         self.armor.defense += defense_incr
     def increaseSpeed(self, speed_incr):
         self.speed += speed_incr
+
+    def fight_aggressive(self):
+        self.defense -= (self.defense * 0.35)
+        self.speed += (self.speed * 0.25)
+        self.strength += (self.strength * 0.25)
+    def fight_conservative(self):
+        self.defense += (self.defense * 0.35)
+        self.speed -= (self.speed * 0.25)
+        self.strength -= (self.strength * 0.25)
 
 class Stats():
     def __init__(self, skill, speed, damage, health):

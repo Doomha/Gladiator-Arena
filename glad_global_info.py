@@ -7,7 +7,7 @@ import glad_opponents as oppo
 
 weapon_ls = [items.Sword(), items.Bow(), items.Spear(), items.Warhammer(), items.Fist()]
 armor_ls = [items.Chainmail(), items.Platemail(), items.StuddedLeather(), items.Tunic()]
-contestants_ls = [classes.Contestant("James", False, None, None, None), classes.Contestant("Jack", False, None, None, None), classes.Contestant("Jaxon", False, None, None, None), classes.Contestant("Jordan", False, None, None, None), classes.Contestant("Jerry", False, None, None, None), classes.Contestant("Jay", False, None, None, None), classes.Contestant("Joel", False, None, None, None), classes.Contestant("Jasper", False, None, None, None)]
+contestants_ls = [classes.Contestant("James", False), classes.Contestant("Jack", False), classes.Contestant("Jaxon", False), classes.Contestant("Jordan", False), classes.Contestant("Jerry", False), classes.Contestant("Jay", False), classes.Contestant("Joel", False), classes.Contestant("Jasper", False)]
 game_mode_ls = [oppo.EasyMode(), oppo.NormalMode(), oppo.HardMode()]
 game_mode = None
 attack_evade_mod = 0.1
@@ -25,5 +25,5 @@ item_find = None
 seller = None
 buyer = None
 transaction_verb = None
-player = classes.Contestant(pl_name, True, None, None, None)
+player = classes.Contestant(pl_name, True)
 shopkeeper = inventory.Person("Ginger", False, 15, 3, 4, 5, 6)
