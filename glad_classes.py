@@ -34,18 +34,18 @@ class Contestant(inventory.Person):
         self.speed += speed_incr
 
     def fight_aggressive(self):
-        self.defense -= (self.defense * 0.5)
-        self.speed += (self.speed * 0.2)
-        self.strength += (self.strength * 0.2)
+        self.defense -= (self.defense * 0.3)
+        self.speed += (self.speed * 0.15)
+        self.strength += (self.strength * 0.15)
         self.zero_stat_check()
         if self.pl_controlled == True:
             pl_attack = "aggressively"
         else:
             oppo_attack = "aggressively"
     def fight_conservative(self):
-        self.defense += (self.defense * 0.5)
-        self.speed -= (self.speed * 0.2)
-        self.strength -= (self.strength * 0.2)
+        self.defense += (self.defense * 0.3)
+        self.speed -= (self.speed * 0.15)
+        self.strength -= (self.strength * 0.15)
         self.zero_stat_check()
         if self.pl_controlled == True:
             pl_attack = "conservatively"
@@ -109,4 +109,4 @@ class Contestant(inventory.Person):
 #: without setting player.name to pl_name here, player.name doesn't update.
 def get_player_name():
     info.pl_name = input("\nWhat is the name of your character?\n> ")
-    info.player.name = info.pl_name
+    info.player.name = info.pl_name.capitalize()

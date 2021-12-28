@@ -42,20 +42,21 @@ def choose_difficulty():
     for b in enumerate(info.game_mode_ls):
         if chosen_diff.lower() == info.game_mode_ls[count].mode_name.lower():
             info.game_mode = info.game_mode_ls[count]
-        elif count == len(info.game_mode_ls):
+        elif count == len(info.game_mode_ls) or chosen_diff == "":
             explain("\nIt looks like you haven't typed in a valid game mode. Try again.")
             choose_difficulty()
         else:
             count += 1
 
 def fight_explain():
-    explain("\tWelcome to the fighting pits! Your character will face a series of opponents in a fight to the death. Your goal is to reduce each of your opponent's health to 0. Contestants, including yourself, start with 10 health points.")
+    explain("\tWelcome to the fighting pits! Your character will face a series of opponents in a fight to the death. Your goal is to reduce each of your opponent's health to 0. Contestants, including yourself, start with 10 health points.\n")
     explain("\n\tThere are a couple of other stats that will be important to remember...")
     explain("\n\nSkill: The chance one of your attacks hits your opponent. Also helps you dodge your opponent's attacks.")
     explain("\nSpeed: Decides who gets to attack first. Also helps you dodge your opponent's attacks.")
-    explain("\nStrength: A key component in calculating the amount of damage your attacks can deal, once they connect with your opponent.")
-    explain("\n\n\tThat being said, your equipment has an impact on your stats as well. Choose a cumbersome weapon, and your Speed will go down. Attack with something small, and your Strength doesn't do much good.")
-    explain("\n\n\tYour character will also be able to buy, sell, and consume items that can boost your stats. Make sure to pace yourself though--some of your opponents will be quite tough!\n\n\t\t\t\t\tGood luck!\n\n")
+    explain("\nStrength: A key component in calculating the amount of damage your attacks can deal, once they connect with your opponent.\n")
+    explain("\n\n\tThat being said, your equipment has an impact on your stats as well. Choose a cumbersome weapon, and your Speed will go down. Attack with something small, and your Strength doesn't do much good.\n")
+    explain("\n\n\tOnce in combat, you will be able to choose your fight style, each with their own pros and cons. For example, fighting aggressively improves your speed and strength, while fighting conservatively increases your defense.\n")
+    explain("\n\n\tYour character will also be able to buy, sell, and consume items that can boost your stats. Make sure to pace yourself though--your opponents might drop some items, but you'll have to beat them first!\n\n\t\t\t\t\tGood luck!\n\n")
     explain("\n\n\n\n\n")
 
 def pl_stats():
@@ -266,7 +267,7 @@ def arena_enter():
     explain(f"\n{info.player.name} enters the arena to thunderous applause.\n\nAs {info.player.name} looks around, {info.player.name} notices that there are several other contestants.")
     lines_end("\n")
     for count,contestant in enumerate(info.contestants_ls,1):
-        print(f"Contestant {count} is: {contestant.name}. Their stats are: {contestant.skill} skill, {contestant.speed} speed, {contestant.strength} strength. {contestant.speed_potion.amount} speed potions, {contestant.strength_potion.amount} strength potions, {contestant.defense_potion.amount} defense potions.")
+        print(f"Contestant {count} is: {contestant.name}. Their stats are: {contestant.skill} skill, {contestant.speed} speed, {contestant.strength} strength.")
     lines_end("")
     def opponent_input_check():
         opponent_input = input(f"\nWhich contestant should {info.player.name} duel?\n> ")
@@ -305,10 +306,10 @@ def attack_init():
     info.player.get_aggression()
     info.opponent.get_aggression()
 
-    pl_speed_range = (round(info.player.getSpeed() + round(info.player.skill)) * 2)
+    pl_speed_range = (round(info.player.getSpeed() + (info.player.skill) / 2) * 2)
     if pl_speed_range >= info.speed_priority_mod:
         pl_speed_range = info.speed_priority_mod - 1
-    opp_speed_range = (round(info.opponent.getSpeed() + round(info.opponent.skill)) * 2)
+    opp_speed_range = (round(info.opponent.getSpeed() + (info.opponent.skill) / 2) * 2)
     if opp_speed_range >= info.speed_priority_mod:
         opp_speed_range = info.speed_priority_mod - 1
     true_speed_pl = round(random.randrange(pl_speed_range, info.speed_priority_mod))
@@ -434,6 +435,7 @@ def win_condition():
         opponent_drop()
         play_again()
     elif info.opponent.health <= 0 and (len(info.contestants_ls) - 1) == 0:
+        info.defeated_opponents += 1
         print(f"\n\n\t\t\t\t\t{info.player.name} beat {info.opponent.name}! {info.player.name} beat {info.defeated_opponents} opponents in total.")
         lines_end(f"\n\n\t\t\t\t\t{info.player.name} wins!\n\n\n\n\n")
         quit()

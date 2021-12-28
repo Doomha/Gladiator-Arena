@@ -118,71 +118,46 @@ class Game():
             count += 1
 
     def item_quant_check(self, max_potions):
-        ls_potions = [info.opponent.strength_potion.amount, info.opponent.speed_potion.amount, info.opponent.defense_potion.amount]
-        print(ls_potions)
         potion_index = 0
 
         def remove_speed_potion():
             if info.opponent.speed_potion.amount > 0:
                 info.opponent.speed_potion.amount -= 1
-                print(f"Took away a speed potion. {info.opponent.speed_potion.amount}")
+                potion_gone = info.get_potion_disposal(max_potions)
         def remove_strength_potion():
             if info.opponent.strength_potion.amount > 0:
                 info.opponent.strength_potion.amount -= 1
-                print(f"Took away a strength potion. {info.opponent.strength_potion.amount}")
+                potion_gone = info.get_potion_disposal(max_potions)
         def remove_defense_potion():
             if info.opponent.defense_potion.amount > 0:
                 info.opponent.defense_potion.amount -= 1
-                print(f"Took away a defense potion. {info.opponent.defense_potion.amount}")
+                potion_gone = info.get_potion_disposal(max_potions)
 
-        def get_total_potions():
-            total_potions = 0
-            for e in range(len(ls_potions)):
-                total_potions += ls_potions[e]
-            return total_potions
-
-        potion_disposal = (get_total_potions() - max_potions)
-        if potion_disposal > 0:
-            print(f"potions to take away: {potion_disposal}")
-            for a in range(potion_disposal):
-                if potion_disposal > 0:
+        k = 1
+        if info.get_potion_disposal(max_potions) > 0:
+            for a in range(info.get_potion_disposal(max_potions)):
+                if info.get_potion_disposal(max_potions) > 0:
                     if potion_index == 0:
                         remove_speed_potion()
-                        if potion_disposal > 0:
+                        if info.get_potion_disposal(max_potions) > 0:
                             remove_strength_potion()
-                            if potion_disposal > 0:
+                            if info.get_potion_disposal(max_potions) > 0:
                                 remove_defense_potion()
-                            else:
-                                break
-                        else:
-                            break
                         potion_index = 1
                     elif potion_index == 1:
                         remove_strength_potion()
-                        if potion_disposal > 0:
+                        if info.get_potion_disposal(max_potions) > 0:
                             remove_defense_potion()
-                            if potion_disposal > 0:
+                            if info.get_potion_disposal(max_potions) > 0:
                                 remove_speed_potion()
-                            else:
-                                break
-                        else:
-                            break
                         potion_index = 2
                     elif potion_index == 2:
                         remove_defense_potion()
-                        if potion_disposal > 0:
+                        if info.get_potion_disposal(max_potions) > 0:
                             remove_speed_potion()
-                            if potion_disposal > 0:
+                            if info.get_potion_disposal(max_potions) > 0:
                                 remove_strength_potion()
-                            else:
-                                break
-                        else:
-                            break                                
                         potion_index = 0
-                else:
-                    break
-
-        print(f"Strength potions: {info.opponent.strength_potion.amount} Defense potions: {info.opponent.defense_potion.amount} Speed potions: {info.opponent.speed_potion.amount}")
 
 
 class EasyMode(Game):
@@ -223,7 +198,7 @@ class NormalMode(Game):
 
 class HardMode(Game):
     def __init__(self):
-        super().__init__(11, 22, "Hard", 5, 6, 13, 0, 11, 0, 4, 0, 3, 1.5, 0.7)
+        super().__init__(6, 10, "Hard", 5, 6, 13, 0, 11, 0, 2, 0, 3, 1.5, 0.7)
 
     def gen_hard_odds(self):
         global w_odds
