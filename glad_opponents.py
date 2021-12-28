@@ -117,6 +117,33 @@ class Game():
             info.contestants_ls[count].sweetcakes.amount = rand_swt
             count += 1
 
+    def item_quant_check(self, max_potions):
+
+        def remove_speed_potion():
+            if info.opponent.speed_potion.amount > 0:
+                info.opponent.speed_potion.amount -= 1
+        def remove_strength_potion():
+            if info.opponent.strength_potion.amount > 0:
+                info.opponent.strength_potion.amount -= 1
+        def remove_defense_potion():
+            if info.opponent.defense_potion.amount > 0:
+                info.opponent.defense_potion.amount -= 1
+
+        def potion_selector():
+            selector = random.randrange(3)
+            if selector == 0 and info.opponent.speed_potion.amount > 0:
+                remove_speed_potion()
+            elif selector == 1 and info.opponent.strength_potion.amount > 0:
+                remove_strength_potion()
+            elif selector == 2 and info.opponent.defense_potion.amount > 0:
+                remove_defense_potion()
+            else:
+                potion_selector()
+
+        if info.get_potion_disposal(max_potions) > 0:
+            for a in range(info.get_potion_disposal(max_potions)):
+                potion_selector()
+
 
 class EasyMode(Game):
     def __init__(self):
@@ -138,7 +165,7 @@ class EasyMode(Game):
 
 class NormalMode(Game):
     def __init__(self):
-        super().__init__(5, 11, "Normal", 4, 2, 11, 5, 16, 0, 2, 1, 4, 1.3, 0.8)
+        super().__init__(5, 11, "Normal", 4, 2, 11, 5, 11, 0, 2, 0, 4, 1.3, 0.8)
 
     def gen_normal_odds(self):
         global w_odds
@@ -156,7 +183,7 @@ class NormalMode(Game):
 
 class HardMode(Game):
     def __init__(self):
-        super().__init__(5, 11, "Hard", 5, 6, 13, 0, 16, 0, 2, 0, 4, 1.5, 0.7)
+        super().__init__(6, 10, "Hard", 5, 6, 13, 0, 11, 0, 2, 0, 3, 1.5, 0.7)
 
     def gen_hard_odds(self):
         global w_odds
@@ -176,7 +203,10 @@ class HardMode(Game):
 def find_mode_odds(self):
     if self.mode_name == "Easy":
         self.gen_easy_odds()
+        self.item_quant_check(3)
     elif self.mode_name == "Normal":
         self.gen_normal_odds()
+        self.item_quant_check(2)
     elif self.mode_name == "Hard":
         self.gen_hard_odds()
+        self.item_quant_check(1)

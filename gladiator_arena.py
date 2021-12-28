@@ -42,20 +42,21 @@ def choose_difficulty():
     for b in enumerate(info.game_mode_ls):
         if chosen_diff.lower() == info.game_mode_ls[count].mode_name.lower():
             info.game_mode = info.game_mode_ls[count]
-        elif count == len(info.game_mode_ls):
-            explain("It looks like you haven't typed in a valid game mode. Try again.")
+        elif count == len(info.game_mode_ls) or chosen_diff == "":
+            explain("\nIt looks like you haven't typed in a valid game mode. Try again.")
             choose_difficulty()
         else:
             count += 1
 
 def fight_explain():
-    explain("\tWelcome to the fighting pits! Your character will face a series of opponents in a fight to the death. Your goal is to reduce each of your opponent's health to 0. Contestants, including yourself, start with 10 health points.")
+    explain("\tWelcome to the fighting pits! Your character will face a series of opponents in a fight to the death. Your goal is to reduce each of your opponent's health to 0. Contestants, including yourself, start with 10 health points.\n")
     explain("\n\tThere are a couple of other stats that will be important to remember...")
     explain("\n\nSkill: The chance one of your attacks hits your opponent. Also helps you dodge your opponent's attacks.")
     explain("\nSpeed: Decides who gets to attack first. Also helps you dodge your opponent's attacks.")
-    explain("\nStrength: A key component in calculating the amount of damage your attacks can deal, once they connect with your opponent.")
-    explain("\n\n\tThat being said, your equipment has an impact on your stats as well. Choose a cumbersome weapon, and your Speed will go down. Attack with something small, and your Strength doesn't do much good.")
-    explain("\n\n\tYour character will also be able to buy, sell, and consume items that can boost your stats. Make sure to pace yourself though--some of your opponents will be quite tough!\n\n\t\t\t\t\tGood luck!\n\n")
+    explain("\nStrength: A key component in calculating the amount of damage your attacks can deal, once they connect with your opponent.\n")
+    explain("\n\n\tThat being said, your equipment has an impact on your stats as well. Choose a cumbersome weapon, and your Speed will go down. Attack with something small, and your Strength doesn't do much good.\n")
+    explain("\n\n\tOnce in combat, you will be able to choose your fight style, each with their own pros and cons. For example, fighting aggressively improves your speed and strength, while fighting conservatively increases your defense.\n")
+    explain("\n\n\tYour character will also be able to buy, sell, and consume items that can boost your stats. Make sure to pace yourself though--your opponents might drop some items, but you'll have to beat them first!\n\n\t\t\t\t\tGood luck!\n\n")
     explain("\n\n\n\n\n")
 
 def pl_stats():
@@ -67,10 +68,10 @@ def show_gold():
     lines_start(f"\n{info.player.name} has {info.player.gold.amount} gold. Here are the options {info.player.name} can choose from:")
 
 def visit_smithy():
-    a = input(f"Would {info.player.name} like to enter the smithy?\n> ")
+    a = input(f"\nWould {info.player.name} like to enter the smithy?\n> ")
     if a.lower() != "yes":
         if info.player.weapon == None or info.player.armor == None:
-            explain(f"It looks like {info.player.name} isn't properly eqipped yet. Visit the smithy to purchase a weapon and armor.\n")
+            explain(f"\nIt looks like {info.player.name} isn't properly eqipped yet. Visit the smithy to purchase a weapon and armor.\n")
             smithy_loop()
         else:
             return
@@ -97,7 +98,7 @@ def smithy_loop():
 
 def sell_weapon():
     weapon_price = round(info.player.weapon.value * info.game_mode.pl_sells_mod)
-    b = input(f"Would {info.player.name} like to sell their {info.player.weapon.name} and buy something else?\n> ")
+    b = input(f"\nWould {info.player.name} like to sell their {info.player.weapon.name} and buy something else?\n> ")
     if b.lower() == "yes" or b.lower() == "y":
         print(f"The smith inspects {info.player.name}'s {info.player.weapon.name}, and is willing to pay {weapon_price} gold for it.")
         c = input(f"Would {info.player.name} like to sell their {info.player.weapon.name}?\n> ")
@@ -111,7 +112,7 @@ def sell_weapon():
 
 def sell_armor():
     armor_price = round(info.player.armor.value * info.game_mode.pl_sells_mod)
-    d = input(f"Would {info.player.name} like to sell their {info.player.armor.name} and buy something else?\n> ")
+    d = input(f"\nWould {info.player.name} like to sell their {info.player.armor.name} and buy something else?\n> ")
     if d.lower() == "yes" or d.lower() == "y":
         print(f"The smith inspects {info.player.name}'s {info.player.armor.name}, and is willing to pay {armor_price} gold for it.")
         e = input(f"Would {info.player.name} like to sell their {info.player.armor.name}?\n> ")
@@ -144,7 +145,7 @@ def weapon_pick():
                     weapon_loop()
                     break
             if count == len(info.weapon_ls):
-                explain("It looks like you haven't typed in a valid weapon option. Try again.")
+                explain("\nIt looks like you haven't typed in a valid weapon option. Try again.")
                 weapon_loop()
                 break
     show_weapons()
@@ -171,7 +172,7 @@ def armor_pick():
                     armor_loop()
                     break
             if count == len(info.armor_ls):
-                explain("It looks like you haven't typed in a valid armor option. Try again.")
+                explain("\nIt looks like you haven't typed in a valid armor option. Try again.")
                 armor_loop()
                 break
     show_armor()
@@ -221,7 +222,7 @@ def valid_item_shop():
             continue_shopping()
             return False
         elif info.item_find == 0:
-            print(f"It looks like {info.seller.name} doesn't have that item right now.")
+            print(f"\nIt looks like {info.seller.name} doesn't have that item right now.")
             continue_shopping()
             return False
         info.item_find -= 1
@@ -256,7 +257,7 @@ def buy_from_seller():
     return
 
 def continue_shopping():
-    c = input(f"Would {info.player.name} like to continue shopping?\n> ")
+    c = input(f"\nWould {info.player.name} like to continue shopping?\n> ")
     if c.lower() == "yes":
         shop_loop()
     else:
@@ -271,7 +272,7 @@ def arena_enter():
     def opponent_input_check():
         opponent_input = input(f"\nWhich contestant should {info.player.name} duel?\n> ")
         if opponent_input.isnumeric() != True or int(opponent_input) > count or int(opponent_input) <= 0:
-            print("It looks like you haven't typed in a valid number. Please try again.\n")
+            print("\nIt looks like you haven't typed in a valid number. Please try again.\n")
             opponent_input_check()
         else:
             info.valid_opponent_input = int(opponent_input)
@@ -301,36 +302,43 @@ def combat_stats():
     print(f"\n{info.opponent.name}'s skill: {round(info.opponent.skill)}, speed: {round(info.opponent.getSpeed())}, damage: {round(info.opponent.getDamage())}, defense: {round(info.opponent.defense)}.\n")
     explain(f"{info.player.name}'s skill: {round(info.player.skill)}, speed: {round(info.player.getSpeed())}, damage: {round(info.player.getDamage())}, defense: {round(info.player.defense)}.\n")
 
-
 def attack_init():
-    true_speed_pl = round(random.randrange((round(info.player.getSpeed()) * 2), info.speed_priority_mod))
-    true_speed_opp = round(random.randrange((round(info.opponent.getSpeed()) * 2), info.speed_priority_mod))
+    info.player.get_aggression()
+    info.opponent.get_aggression()
 
-    def attack_priority(scenario):
-        if scenario == True:
-            print(f"\n{faster} gains the upper hand and attacks {slower}.\n")
-        else:
-            print(f"\n\nNeither {info.player.name} or {info.opponent.name} is faster.")
+    pl_speed_range = (round(info.player.getSpeed() + (info.player.skill) / 2) * 2)
+    if pl_speed_range >= info.speed_priority_mod:
+        pl_speed_range = info.speed_priority_mod - 1
+    opp_speed_range = (round(info.opponent.getSpeed() + (info.opponent.skill) / 2) * 2)
+    if opp_speed_range >= info.speed_priority_mod:
+        opp_speed_range = info.speed_priority_mod - 1
+    true_speed_pl = round(random.randrange(pl_speed_range, info.speed_priority_mod))
+    true_speed_opp = round(random.randrange(opp_speed_range, info.speed_priority_mod))
 
-    if true_speed_pl == true_speed_opp:
-        chance = random.randrange(0, 2)
-        if chance == 0:
-            attack_priority(False)
-            print(f"However, {info.opponent.name} gains the upper hand and attacks.\n")
-        else:
-            attack_priority(False)
-            print(f"However, {info.player.name} gains the upper hand and attacks.\n")
-    else:
-        if true_speed_pl > true_speed_opp:
-            faster = info.player.name
-            slower = info.opponent.name
-            info.turnCount = info.player
-        elif true_speed_pl < true_speed_opp:
-            faster = info.opponent.name
-            slower = info.player.name
-            info.turnCount = info.opponent
-        attack_priority(True)
-        inventory_loop()
+    def attack_priority():
+        if true_speed_pl != true_speed_opp:
+            if true_speed_pl > true_speed_opp:
+                faster = info.player.name
+                slower = info.opponent.name
+                info.turnCount = info.player
+                print(f"\n{faster}'s true speed is {true_speed_pl}, and {slower}'s true speed is {true_speed_opp}.")
+            elif true_speed_pl < true_speed_opp:
+                faster = info.opponent.name
+                slower = info.player.name
+                info.turnCount = info.opponent
+                print(f"\n{faster}'s true speed is: {true_speed_opp}, and {slower}'s true speed is: {true_speed_pl}.")
+            print(f"{faster} gains the upper hand and attacks {slower}.\n")
+        elif true_speed_pl == true_speed_opp:
+            print(f"\n\nNeither {info.player.name} or {info.opponent.name} is faster. Both of their true speed is {true_speed_pl}.")
+            chance = random.randrange(0, 2)
+            if chance == 0:
+                info.turnCount = info.opponent
+                print(f"However, {info.opponent.name} gains the upper hand and attacks.\n")
+            elif chance == 1:
+                info.turnCount = info.player
+                print(f"However, {info.player.name} gains the upper hand and attacks.\n")
+
+    attack_priority()
     attack()
 
 
@@ -339,7 +347,7 @@ def attack():
     if info.turnCount == info.player:
         source = info.player
         target = info.opponent
-    else:
+    elif info.turnCount == info.opponent:
         source = info.opponent
         target = info.player
     if source.skill + chance >= info.hit_chance:
@@ -364,6 +372,7 @@ def inventory_loop():
         if use_inventory() == True:
             info.player.consume_item()
             trigger_item_effect()
+            inventory_loop()
 
 def prompt_inventory():
     a = input(f"Would {info.player.name} like to view their inventory?\n> ")
@@ -408,7 +417,7 @@ def trigger_item_effect():
         defense_incr = info.player.defense_increase_check()
         info.player.increaseDefense(defense_incr)
         stat = round(info.player.defense)
-        item_explanation("defense", defense_incr, stat)
+        item_explanation("defense", defense_incr, stat) #: This increases the stats of the player's armor, not their defense.
 
     elif info.player.speed_increase_check() > 0:
         speed_incr = info.player.speed_increase_check()
@@ -420,12 +429,14 @@ def win_condition():
     if info.opponent.health <= 0 and (len(info.contestants_ls) - 1) > 0:
         c = info.contestants_ls.index(info.opponent)
         info.contestants_ls.pop(c)
-        explain(f"\n{info.player.name} beat {info.opponent.name}!\n")
+        info.defeated_opponents += 1
+        explain(f"\n{info.player.name} beat {info.opponent.name}! {info.player.name} has beaten {info.defeated_opponents} opponents so far.\n")
         info.opponent.ls_inventory()
         opponent_drop()
         play_again()
     elif info.opponent.health <= 0 and (len(info.contestants_ls) - 1) == 0:
-        print(f"\n\n\t\t\t\t\t{info.player.name} beat {info.opponent.name}!")
+        info.defeated_opponents += 1
+        print(f"\n\n\t\t\t\t\t{info.player.name} beat {info.opponent.name}! {info.player.name} beat {info.defeated_opponents} opponents in total.")
         lines_end(f"\n\n\t\t\t\t\t{info.player.name} wins!\n\n\n\n\n")
         quit()
     elif info.player.health <= 0:
@@ -447,6 +458,7 @@ def play_again():
     reset_player_stats()
     visit_smithy()
     visit_shop()
+    inventory_loop()
     arena_enter()
     combat_stats()
     attack_init()
