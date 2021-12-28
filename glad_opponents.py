@@ -117,6 +117,73 @@ class Game():
             info.contestants_ls[count].sweetcakes.amount = rand_swt
             count += 1
 
+    def item_quant_check(self, max_potions):
+        ls_potions = [info.opponent.strength_potion.amount, info.opponent.speed_potion.amount, info.opponent.defense_potion.amount]
+        print(ls_potions)
+        potion_index = 0
+
+        def remove_speed_potion():
+            if info.opponent.speed_potion.amount > 0:
+                info.opponent.speed_potion.amount -= 1
+                print(f"Took away a speed potion. {info.opponent.speed_potion.amount}")
+        def remove_strength_potion():
+            if info.opponent.strength_potion.amount > 0:
+                info.opponent.strength_potion.amount -= 1
+                print(f"Took away a strength potion. {info.opponent.strength_potion.amount}")
+        def remove_defense_potion():
+            if info.opponent.defense_potion.amount > 0:
+                info.opponent.defense_potion.amount -= 1
+                print(f"Took away a defense potion. {info.opponent.defense_potion.amount}")
+
+        def get_total_potions():
+            total_potions = 0
+            for e in range(len(ls_potions)):
+                total_potions += ls_potions[e]
+            return total_potions
+
+        potion_disposal = (get_total_potions() - max_potions)
+        if potion_disposal > 0:
+            print(f"potions to take away: {potion_disposal}")
+            for a in range(potion_disposal):
+                if potion_disposal > 0:
+                    if potion_index == 0:
+                        remove_speed_potion()
+                        if potion_disposal > 0:
+                            remove_strength_potion()
+                            if potion_disposal > 0:
+                                remove_defense_potion()
+                            else:
+                                break
+                        else:
+                            break
+                        potion_index = 1
+                    elif potion_index == 1:
+                        remove_strength_potion()
+                        if potion_disposal > 0:
+                            remove_defense_potion()
+                            if potion_disposal > 0:
+                                remove_speed_potion()
+                            else:
+                                break
+                        else:
+                            break
+                        potion_index = 2
+                    elif potion_index == 2:
+                        remove_defense_potion()
+                        if potion_disposal > 0:
+                            remove_speed_potion()
+                            if potion_disposal > 0:
+                                remove_strength_potion()
+                            else:
+                                break
+                        else:
+                            break                                
+                        potion_index = 0
+                else:
+                    break
+
+        print(f"Strength potions: {info.opponent.strength_potion.amount} Defense potions: {info.opponent.defense_potion.amount} Speed potions: {info.opponent.speed_potion.amount}")
+
 
 class EasyMode(Game):
     def __init__(self):
@@ -138,7 +205,7 @@ class EasyMode(Game):
 
 class NormalMode(Game):
     def __init__(self):
-        super().__init__(5, 11, "Normal", 4, 2, 11, 5, 16, 0, 2, 1, 4, 1.3, 0.8)
+        super().__init__(5, 11, "Normal", 4, 2, 11, 5, 11, 0, 2, 0, 4, 1.3, 0.8)
 
     def gen_normal_odds(self):
         global w_odds
@@ -156,7 +223,7 @@ class NormalMode(Game):
 
 class HardMode(Game):
     def __init__(self):
-        super().__init__(5, 11, "Hard", 5, 6, 13, 0, 16, 0, 2, 0, 4, 1.5, 0.7)
+        super().__init__(11, 22, "Hard", 5, 6, 13, 0, 11, 0, 4, 0, 3, 1.5, 0.7)
 
     def gen_hard_odds(self):
         global w_odds
@@ -176,7 +243,10 @@ class HardMode(Game):
 def find_mode_odds(self):
     if self.mode_name == "Easy":
         self.gen_easy_odds()
+        self.item_quant_check(3)
     elif self.mode_name == "Normal":
         self.gen_normal_odds()
+        self.item_quant_check(2)
     elif self.mode_name == "Hard":
         self.gen_hard_odds()
+        self.item_quant_check(1)
