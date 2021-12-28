@@ -118,46 +118,31 @@ class Game():
             count += 1
 
     def item_quant_check(self, max_potions):
-        potion_index = 0
 
         def remove_speed_potion():
             if info.opponent.speed_potion.amount > 0:
                 info.opponent.speed_potion.amount -= 1
-                potion_gone = info.get_potion_disposal(max_potions)
         def remove_strength_potion():
             if info.opponent.strength_potion.amount > 0:
                 info.opponent.strength_potion.amount -= 1
-                potion_gone = info.get_potion_disposal(max_potions)
         def remove_defense_potion():
             if info.opponent.defense_potion.amount > 0:
                 info.opponent.defense_potion.amount -= 1
-                potion_gone = info.get_potion_disposal(max_potions)
 
-        k = 1
+        def potion_selector():
+            selector = random.randrange(3)
+            if selector == 0 and info.opponent.speed_potion.amount > 0:
+                remove_speed_potion()
+            elif selector == 1 and info.opponent.strength_potion.amount > 0:
+                remove_strength_potion()
+            elif selector == 2 and info.opponent.defense_potion.amount > 0:
+                remove_defense_potion()
+            else:
+                potion_selector()
+
         if info.get_potion_disposal(max_potions) > 0:
             for a in range(info.get_potion_disposal(max_potions)):
-                if info.get_potion_disposal(max_potions) > 0:
-                    if potion_index == 0:
-                        remove_speed_potion()
-                        if info.get_potion_disposal(max_potions) > 0:
-                            remove_strength_potion()
-                            if info.get_potion_disposal(max_potions) > 0:
-                                remove_defense_potion()
-                        potion_index = 1
-                    elif potion_index == 1:
-                        remove_strength_potion()
-                        if info.get_potion_disposal(max_potions) > 0:
-                            remove_defense_potion()
-                            if info.get_potion_disposal(max_potions) > 0:
-                                remove_speed_potion()
-                        potion_index = 2
-                    elif potion_index == 2:
-                        remove_defense_potion()
-                        if info.get_potion_disposal(max_potions) > 0:
-                            remove_speed_potion()
-                            if info.get_potion_disposal(max_potions) > 0:
-                                remove_strength_potion()
-                        potion_index = 0
+                potion_selector()
 
 
 class EasyMode(Game):
