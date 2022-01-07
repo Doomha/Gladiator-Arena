@@ -77,7 +77,7 @@ class Armor(Item):
 
 class Chainmail(Armor):
     def __init__(self):
-        super().__init__("Chainmail", , 4, 4)
+        super().__init__("Chainmail",5, 4, 4)
 
 class Platemail(Armor):
     def __init__(self):
